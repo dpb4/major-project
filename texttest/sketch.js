@@ -23,8 +23,8 @@ function setup() {
   fill(255);
 
   charSetup();
-  charBackground('.');
-  gradientStyle(0);
+  // charBackground('.');
+  gradientStyle(1);
   
   for (let i = 0; i < windowWidth; i += charWidth) {
     console.log(colourMapper(i/windowWidth));
