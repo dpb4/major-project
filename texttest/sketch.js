@@ -24,11 +24,11 @@ function setup() {
 
   charSetup();
   // charBackground('.');
-  gradientStyle(1);
+  gradientStyle(0);
   
   for (let i = 0; i < windowWidth; i += charWidth) {
     console.log(colourMapper(i/windowWidth));
-    charLine(i, 0, i, windowHeight, colourMapper(i/windowWidth));
+    charLine(i, 0, i, windowHeight, '-');
   }
   printOut();
 }
