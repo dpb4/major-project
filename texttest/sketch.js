@@ -7,12 +7,10 @@
 
 let font;
 let resX, resY;
-let charWid, charHeight;
+let charWidth, charHeight;
 
 let block;
 let row;
-
-let chars = 'abcdefghijklmnopqrstuvwxxyz';
 
 function preload() {
   font = loadFont("./assets/CONSOLA.TTF");
@@ -22,36 +20,25 @@ function setup() {
   createCanvas(0, 0);
 
   background(0, 0);
-  // stroke(255);
   fill(255);
 
-  textAlign(LEFT, TOP);
-  textFont(font);
-  textSize(16);
-  textLeading(textSize());
-
-  charWid = textWidth('0');
-  charHeight = textAscent() + textDescent();
-
-  resX = floor(windowWidth/charWid);
-  resY = floor(windowHeight/charHeight);
-
-  row = '0'.repeat(resX+1);
-  row += '\n';
-  block = row.repeat(resY+1);
-
-  document.getElementById('test').style.fontSize = `${textSize()}px`;
-  document.getElementById('test').style.lineHeight = `${charHeight}px`;
+  charSetup();
+  charBackground('.');
+  gradientStyle(0);
   
-  frameRate(10);
+  for (let i = 0; i < windowWidth; i += charWidth) {
+    console.log(colourMapper(i/windowWidth));
+    charLine(i, 0, i, windowHeight, colourMapper(i/windowWidth));
+  }
+  printOut();
 }
 
 function draw() {
-  document.getElementById('test').innerHTML = block;
-
-  // row = chars[floor(random(chars.length))].repeat(resX+1);
-  // row += '\n';
-  // block = row.repeat(resY+1);
+  // your code goes here
+  // charBackground('.');
+  // outBlock[10][10] = 0;
+  // outBlock[15][15] = 1;
+  // charPoint(mouseX, mouseY, "h");
+  // charLine(0, 0, mouseX, mouseY, '0');
+  // printOut();
 }
-
-
