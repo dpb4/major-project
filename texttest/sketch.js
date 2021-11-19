@@ -36,8 +36,10 @@ function draw() {
   // your code goes here
   charBackground('.');
   
-  charLineTriangle(0, 0, 300, 500, mouseX, mouseY);
-  charLineRect(0, 0, mouseX, mouseY);
+  // charLineTriangle(0, 0, 300, 500, mouseX, mouseY);
+  // charLineRect(0, 0, mouseX, mouseY);
+  charPoint(windowWidth/2, windowHeight/2);
+  charLineCircle(windowWidth/2, windowHeight/2, dist(mouseX, mouseY, windowWidth/2, windowHeight/2));
 
   printOut();
 }

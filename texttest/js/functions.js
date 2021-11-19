@@ -11,8 +11,8 @@ let gradients = [
 
 let currentGradient = gradients[0];
 
-let currentFill = 0;
-let currentStroke = 0;
+let currentFill = currentGradient[currentGradient.length-1];
+let currentStroke = currentGradient[currentGradient.length-1];
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -99,7 +99,7 @@ function screen2Char(x, y) {
   return [floor(x/charWidth), floor(y/charHeight)];
 }
 
-function charPoint(x, y, char) {
+function charPoint(x, y, char = currentStroke) {
   if (x >= 0 && x <= windowWidth && y >= 0 && y <= windowHeight) {
     let p = screen2Char(x, y);
     outBlock[p[0]][p[1]] = char;
@@ -131,8 +131,19 @@ function charLineTriangle(x1, y1, x2, y2, x3, y3, char = currentStroke) {
 }
 
 function charLineRect(x, y, w, h, char = currentStroke) {
-  charLine(    x,     y, x + w,     y, char);
-  charLine(    x,     y,     x, y + h, char);
-  charLine(x + w,     y, x + w, y + h, char);
-  charLine(    x, y + h, x + w, y + h, char);
+  charLine(x    , y    , x + w, y    , char);
+  charLine(x    , y    , x    , y + h, char);
+  charLine(x + w, y    , x + w, y + h, char);
+  charLine(x    , y + h, x + w, y + h, char);
+}
+
+function charLineCircle(x, y, r, char = currentStroke) {
+  let verts = r/10 + 4; // subject to change
+  let angStep = 1 / verts * TWO_PI;
+  for (let i = 0; i < verts; i++) {
+    let angle = i * angStep;
+
+    charLine(x + r*cos(angle), y + r*sin(angle), x + r*cos(angle - angStep), y + r*sin(angle - angStep));
+    lastAngle = angle;
+  }
 }
