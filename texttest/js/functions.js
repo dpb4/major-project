@@ -1,10 +1,5 @@
 let outBlock = [];
 
-// possible gradients:
-// .`:,;'_^"\></-!~=)(|j?}{][ti+l7v1%yrfcJ32uIC$zwo96sngaT5qpkYVOL40&mG8*xhedbZUSAQPFDXWK#RNEHBM@ 
-// .:-=+*#%@
-// .'`^",:;Il!i><~+_-?][}{1)(|\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$
-
 // NOT ALLOWED CHARACTERS '()[]{}<>- '
 let gradients = [
   '.:=+*#%@',
@@ -120,8 +115,8 @@ function charLine(x1, y1, x2, y2, char) {
   return null;
 }
 
-function charLineTriangle(x1, y1, x2, y2, x3, y3, char) {
-  line(x1, y1, x2, y2, char);
-  line(x2, y2, x3, y3, char);
-  line(x3, y3, x1, y1, char);
+function charLineTriangle(x1, y1, x2, y2, x3, y3, char = '0') {
+  charLine(x1, y1, x2, y2, char);
+  charLine(x2, y2, x3, y3, char);
+  charLine(x3, y3, x1, y1, char);
 }

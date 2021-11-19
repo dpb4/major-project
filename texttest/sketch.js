@@ -26,19 +26,19 @@ function setup() {
   // charBackground('.');
   gradientStyle(0);
   
-  for (let i = 0; i < windowWidth; i += charWidth) {
-    console.log(colourMapper(i/windowWidth));
-    charLine(i, 0, i, windowHeight, colourMapper(i/windowWidth));
-  }
-  printOut();
+  // for (let i = 0; i < windowWidth; i += charWidth) {
+  //   console.log(colourMapper(i/windowWidth));
+  //   charLine(i, 0, i, windowHeight, colourMapper(i/windowWidth));
+  // }
 }
 
 function draw() {
   // your code goes here
-  // charBackground('.');
+  charBackground('.');
   // outBlock[10][10] = 0;
   // outBlock[15][15] = 1;
   // charPoint(mouseX, mouseY, "h");
   // charLine(0, 0, mouseX, mouseY, '0');
-  // printOut();
+  charLineTriangle(0, 0, 300, 500, mouseX, mouseY, '#');
+  printOut();
 }
