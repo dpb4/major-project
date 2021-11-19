@@ -5,10 +5,11 @@ let outBlock = [];
 // .:-=+*#%@
 // .'`^",:;Il!i><~+_-?][}{1)(|\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$
 
+// NOT ALLOWED CHARACTERS '()[]{}<>- '
 let gradients = [
-  '.:-=+*#%@',
-  '.\'`^",:;Il!i><~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$',
-  '.`:,;_^"><-!~=)(|j?}{][ti+l7v1%yrfcJ32uIC$zwo96sngaT5qpkYVOL40&mG8*xhedbZUSAQPFDXWK#RNEHBM@'
+  '.:=+*#%@',
+  '.\'`^",:;Il!i~+_1?|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$',
+  '.`:,;_^"!~=|jti+l7v1yrfcJ32uIC$zwo96sngaT5qpkYVOL40&mG8*xhedbZUSAQPFDXWK#RNEHBM@%'
 ];
 
 let currentGradient = gradients[0];
@@ -59,8 +60,10 @@ function gradientStyle(s) {
 
 function colourMapper(f) {
   f = max(0, min(f, 1));
-
-  return currentGradient[floor(f * (currentGradient.length-1))];
+  if (f !== 1) {
+    return currentGradient[floor(f * currentGradient.length)];
+  }
+  return currentGradient[currentGradient.length-1];
 }
 
 function printOut() {

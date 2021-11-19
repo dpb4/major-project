@@ -3,6 +3,7 @@ body, html {
     margin: 0;
     height: 100%;
     /* overflow: hidden; */
+    position:fixed;
     background-color: black;
 }
 ::-webkit-scrollbar {
@@ -14,14 +15,16 @@ body, html {
     top: 0;
     left: 0;
 
+    -webkit-user-select: none; /* Safari */        
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+
     color: white;
     font-family: consolas;
     /* these will get changed by my javascript */
     font-size: 16px;
     line-height: 1;
-    /* word-break:keep-all; */
-    /* word-wrap: break-word; */
-    /* white-space:pre; */
 }
 
 @font-face {
