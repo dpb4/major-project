@@ -4,14 +4,13 @@ let outBlock = [];
 let gradients = [
   '.:=+*#%@',
   '.\'`^",:;Il!i~+_1?|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$',
-  '.`:,;_^"!~=|jti+l7v1yrfcJ32uIC$zwo96sngaT5qpkYVOL40&mG8*xhedbZUSAQPFDXWK#RNEHBM@%'
+  '.`,:;_^"!~=|jti+l7v1yrfcJ32uIC$zwo96sngaT5qpkYVOL40&mG8*xhedbZUSAQPFDXWK#RNEHBM@%'
 ];
 
 let currentGradient = gradients[0];
 
-let currentFill;
-let currentStroke;
-let currentBG;
+let currentFill = 0;
+let currentStroke = 0;
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -22,13 +21,9 @@ function insert(str, index, value) {
 }
 
 function randChar(length) {
-  let result           = '';
-  let characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let charactersLength = characters.length;
-  for ( let i = 0; i < length; i++ ) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
+  let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.`:,;_^"!~=|$&*@%#';
+  
+  return characters[round(random(characters.length))];
 }
 
 function charSetup() {
@@ -59,6 +54,22 @@ function colourMapper(f) {
     return currentGradient[floor(f * currentGradient.length)];
   }
   return currentGradient[currentGradient.length-1];
+}
+
+function charFill(f) {
+  if (typeof f === 'number') {
+    currentFill = colourMapper(f);
+  } else if (typeof f === 'string' && f.length === 1) {
+    currentFill = f;
+  }
+}
+
+function charStroke(f) {
+  if (typeof f === 'number') {
+    currentStroke = colourMapper(f);
+  } else if (typeof f === 'string' && f.length === 1) {
+    currentStroke = f;
+  }
 }
 
 function printOut() {
@@ -96,7 +107,7 @@ function charPoint(x, y, char) {
   }
 }
 
-function charLine(x1, y1, x2, y2, char) {
+function charLine(x1, y1, x2, y2, char = currentStroke) {
   let d = Math.max(Math.abs(x2-x1), Math.abs(y2-y1));
   if (d !== 0) {
     let roundingOff = 0.0001;
@@ -115,7 +126,7 @@ function charLine(x1, y1, x2, y2, char) {
   return null;
 }
 
-function charLineTriangle(x1, y1, x2, y2, x3, y3, char = '0') {
+function charLineTriangle(x1, y1, x2, y2, x3, y3, char = currentStroke) {
   charLine(x1, y1, x2, y2, char);
   charLine(x2, y2, x3, y3, char);
   charLine(x3, y3, x1, y1, char);

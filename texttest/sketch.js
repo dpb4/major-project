@@ -35,10 +35,13 @@ function setup() {
 function draw() {
   // your code goes here
   charBackground('.');
-  // outBlock[10][10] = 0;
-  // outBlock[15][15] = 1;
-  // charPoint(mouseX, mouseY, "h");
-  // charLine(0, 0, mouseX, mouseY, '0');
-  charLineTriangle(0, 0, 300, 500, mouseX, mouseY, '#');
+  
+  charLineTriangle(0, 0, 300, 500, mouseX, mouseY);
+
+
   printOut();
+}
+
+function keyPressed() {
+  charStroke(randChar()); 
 }
