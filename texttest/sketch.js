@@ -22,7 +22,7 @@ function setup() {
   background(0, 0);
   fill(255);
 
-  charSetup();
+  charSetup(12);
   // charBackground('.');
   gradientStyle(0);
   

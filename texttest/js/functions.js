@@ -28,10 +28,10 @@ function randChar() {
   return characters[round(random(characters.length))];
 }
 
-function charSetup() {
+function charSetup(res = 16) {
   textAlign(LEFT, TOP);
   textFont(font);
-  textSize(16);
+  textSize(res);
   textLeading(textSize());
 
   charWidth = textWidth('0');
@@ -138,7 +138,7 @@ function charLineRect(x, y, w, h, char = currentStroke) {
 }
 
 function charLineCircle(x, y, r, char = currentStroke) {
-  let verts = r/10 + 4; // subject to change
+  let verts = floor(r/10 + 4); // subject to change
   let angStep = 1 / verts * TWO_PI;
   for (let i = 0; i < verts; i++) {
     let angle = i * angStep;
