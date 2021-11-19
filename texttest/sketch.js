@@ -37,7 +37,7 @@ function draw() {
   charBackground('.');
   
   charLineTriangle(0, 0, 300, 500, mouseX, mouseY);
-
+  charLineRect(0, 0, mouseX, mouseY);
 
   printOut();
 }

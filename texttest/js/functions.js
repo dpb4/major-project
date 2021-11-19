@@ -1,3 +1,5 @@
+// TODO: circle, ellipse?, filled trianlge, filled rectangle
+
 let outBlock = [];
 
 // NOT ALLOWED CHARACTERS '()[]{}<>- '
@@ -20,7 +22,7 @@ function insert(str, index, value) {
   return str.substr(0, index) + value + str.substr(index);
 }
 
-function randChar(length) {
+function randChar() {
   let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.`:,;_^"!~=|$&*@%#';
   
   return characters[round(random(characters.length))];
@@ -94,16 +96,13 @@ function charBackground(char = '.') {
 }
 
 function screen2Char(x, y) {
-  return createVector(floor(x/charWidth), floor(y/charHeight));
+  return [floor(x/charWidth), floor(y/charHeight)];
 }
 
 function charPoint(x, y, char) {
-  // TODO redo
   if (x >= 0 && x <= windowWidth && y >= 0 && y <= windowHeight) {
-    // console.log("yuh");
     let p = screen2Char(x, y);
-
-    outBlock[p.x][p.y] = char;
+    outBlock[p[0]][p[1]] = char;
   }
 }
 
@@ -117,7 +116,6 @@ function charLine(x1, y1, x2, y2, char = currentStroke) {
       points.push(lerp(x1 + roundingOff, x2 + roundingOff, i/2/d));
       points.push(lerp(y1 + roundingOff, y2 + roundingOff, i/2/d));
 
-      let p = screen2Char(points[i], points[i+1]);
       charPoint(points[i], points[i+1], char);
     }
 
@@ -130,4 +128,11 @@ function charLineTriangle(x1, y1, x2, y2, x3, y3, char = currentStroke) {
   charLine(x1, y1, x2, y2, char);
   charLine(x2, y2, x3, y3, char);
   charLine(x3, y3, x1, y1, char);
+}
+
+function charLineRect(x, y, w, h, char = currentStroke) {
+  charLine(    x,     y, x + w,     y, char);
+  charLine(    x,     y,     x, y + h, char);
+  charLine(x + w,     y, x + w, y + h, char);
+  charLine(    x, y + h, x + w, y + h, char);
 }
