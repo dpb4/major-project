@@ -1,12 +1,14 @@
 // TODO: circle, ellipse?, filled trianlge, filled rectangle
 
 let outBlock = [];
-
-// NOT ALLOWED CHARACTERS '()[]{}<>- '
+let font;
+let resX, resY;
+let charWidth, charHeight;
+// NOT ALLOWED CHARACTERS: ()[]{}<>- `?
 let gradients = [
   '.:=+*#%@',
-  '.\'`^",:;Il!i~+_1?|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$',
-  '.`,:;_^"!~=|jti+l7v1yrfcJ32uIC$zwo96sngaT5qpkYVOL40&mG8*xhedbZUSAQPFDXWK#RNEHBM@%'
+  '.:;lIE8&%',
+  '.\':;LlIE9G8&%',
 ];
 
 let currentGradient = gradients[0];
@@ -72,6 +74,8 @@ function charStroke(f) {
   } else if (typeof f === 'string' && f.length === 1) {
     currentStroke = f;
   }
+
+  return currentStroke;
 }
 
 function printOut() {
@@ -143,7 +147,7 @@ function charLineCircle(x, y, r, char = currentStroke) {
   for (let i = 0; i < verts; i++) {
     let angle = i * angStep;
 
-    charLine(x + r*cos(angle), y + r*sin(angle), x + r*cos(angle - angStep), y + r*sin(angle - angStep));
+    charLine(x + r*cos(angle), y + r*sin(angle), x + r*cos(angle - angStep), y + r*sin(angle - angStep), char);
     lastAngle = angle;
   }
 }

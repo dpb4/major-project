@@ -5,45 +5,53 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
-let font;
-let resX, resY;
-let charWidth, charHeight;
-
-let block;
-let row;
+let video;
 
 function preload() {
   font = loadFont("./assets/CONSOLA.TTF");
+  video = createCapture(VIDEO, setWid);
 }
 
 function setup() {
-  createCanvas(0, 0);
+  createCanvas(windowWidth, windowHeight);
 
   background(0, 0);
   fill(255);
 
   charSetup(12);
-  // charBackground('.');
-  gradientStyle(0);
-  
-  // for (let i = 0; i < windowWidth; i += charWidth) {
-  //   console.log(colourMapper(i/windowWidth));
-  //   charLine(i, 0, i, windowHeight, colourMapper(i/windowWidth));
-  // }
+  gradientStyle(1);
+}
+
+function setWid() {
+  video.size(video.width * height/video.height, height);
+  video.hide();
+}
+
+function pos2pix(image, x, y) {
+  x = floor(x);
+  y = floor(y);
+  if (x >= 0 && x < image.width && y >= 0 && y < image.height) {
+    return image.pixels[(y*image.width + x)*4];
+  }
+  return 0;
 }
 
 function draw() {
-  // your code goes here
+
   charBackground('.');
-  
-  // charLineTriangle(0, 0, 300, 500, mouseX, mouseY);
-  // charLineRect(0, 0, mouseX, mouseY);
-  charPoint(windowWidth/2, windowHeight/2);
-  charLineCircle(windowWidth/2, windowHeight/2, dist(mouseX, mouseY, windowWidth/2, windowHeight/2));
+
+  video.loadPixels();
+  for (let x = 0; x < width; x += charWidth) {
+    for (let y = 0; y < height; y += charHeight) {
+      charStroke(pos2pix(video, x, y) / 255);
+
+      charPoint(x, y, currentStroke);
+    }
+  }
 
   printOut();
 }
 
 function keyPressed() {
-  charStroke(randChar()); 
+  // charStroke(randChar()); 
 }
