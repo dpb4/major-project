@@ -41,7 +41,7 @@ function charSetup(res = 16) {
   charWidth = textWidth('0');
   charHeight = textAscent() + textDescent();
 
-  resX = floor(windowWidth/charWidth) + 1;
+  resX = floor(windowWidth/charWidth) + 2;
   resY = floor(windowHeight/charHeight) + 1;
 
   outBlock = new Array(resX).fill(0).map(() => new Array(resY).fill('='));
