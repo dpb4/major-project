@@ -6,11 +6,11 @@ let outBlock = [];
 let font;
 let resX, resY;
 let charWidth, charHeight;
-// NOT ALLOWED CHARACTERS: ()[]{}<>- `?
+// NOT ALLOWED CHARACTERS: ()[]{}<>- `?&
 let gradients = [
   '.:=+*#%@',
-  '.:;lIE8&%',
-  '.\':;LlIE9G8&%',
+  '.:;lIE8%',
+  '.\':;LlIE9G8%',
 ];
 
 let currentGradient = gradients[0];
