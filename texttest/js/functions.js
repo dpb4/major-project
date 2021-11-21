@@ -1,5 +1,7 @@
 // TODO: circle, ellipse?, filled trianlge, filled rectangle
 
+// font is needed to get resolution of characters
+
 let outBlock = [];
 let font;
 let resX, resY;
