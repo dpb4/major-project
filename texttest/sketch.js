@@ -31,7 +31,8 @@ function pos2pix(image, x, y) {
   x = floor(x);
   y = floor(y);
   if (x >= 0 && x < image.width && y >= 0 && y < image.height) {
-    return image.pixels[(y*image.width + (image.width - x))*4];
+    let i = (y*image.width + (image.width - x - 1))*4;
+    return (image.pixels[i] + image.pixels[i + 1] + image.pixels[i + 2]) / 3;
   }
   return 0;
 }
