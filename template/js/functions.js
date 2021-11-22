@@ -4,11 +4,11 @@ let outBlock = [];
 let font;
 let resX, resY;
 let charWidth, charHeight;
-// NOT ALLOWED CHARACTERS: ()[]{}<>- `?
+// NOT ALLOWED CHARACTERS: ()[]{}<>- `?&
 let gradients = [
   '.:=+*#%@',
-  '.:;lIE8&%',
-  '.\':;LlIE9G8&%',
+  '.:;lIE8%',
+  '.\':!;LlIE9G8%',
 ];
 
 let currentGradient = gradients[0];
@@ -95,8 +95,14 @@ function printOut() {
   document.getElementById('textCanvas').innerHTML = out;
 }
 
-function charBackground(char = '.') {
-  outBlock = new Array(resX).fill(0).map(() => new Array(resY).fill(char));
+function charBackground(f = 0) {
+  if (typeof f === 'number') {
+    outBlock = new Array(resX).fill(0).map(() => new Array(resY).fill(colourMapper(f)));
+  } else if (typeof f === 'string' && f.length === 1) {
+    outBlock = new Array(resX).fill(0).map(() => new Array(resY).fill(f));
+  }
+
+  // outBlock = new Array(resX).fill(0).map(() => new Array(resY).fill(char));
 }
 
 function screen2Char(x, y) {

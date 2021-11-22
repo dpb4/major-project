@@ -16,16 +16,30 @@ function setup() {
   fill(255);
 
   charSetup(12);
-  gradientStyle(3);
+  charBackground(0);
+  gradientStyle(2);
 
-  for (let i = 0; i < width; i += charWidth) {
-    charStroke(i/width);
-    charLine(i, 0, i, height);
+  // for (let i = 0; i < width; i += charWidth) {
+  //   charStroke(i/width);
+  //   charLine(i, 0, i, height);
+  // }
+  for (let i = 0; i < 5; i++) {
+    charStroke(1);
+    charLineTriangle(random(width), random(height), random(width), random(height), random(width), random(height));
   }
 }
 
 function draw() {
   // your code goes here!
 
+
   printOut();
+}
+
+function keyPressed() {
+  charBackground(0);
+  for (let i = 0; i < 5; i++) {
+    charStroke(1);
+    charLineTriangle(random(width), random(height), random(width), random(height), random(width), random(height));
+  }
 }
