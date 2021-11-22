@@ -2,5 +2,5 @@
 CS30 Major Project
 
 # Current Sub-Projects
-- [Ascii Camera](declanbbbbb.github.io/major-project/texttest)
-- [Gradient test/miscellaneous testing](declanbbbbb.github.io/major-project/template)
+- [Ascii Camera](texttest)
+- [Gradient test/miscellaneous testing](template)
