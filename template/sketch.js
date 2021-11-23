@@ -23,7 +23,7 @@ function setup() {
   //   charStroke(i/width);
   //   charLine(i, 0, i, height);
   // }
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 1; i++) {
     charStroke(1);
     charLineTriangle(random(width), random(height), random(width), random(height), random(width), random(height));
   }
@@ -38,8 +38,9 @@ function draw() {
 
 function keyPressed() {
   charBackground(0);
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 1; i++) {
     charStroke(1);
     charLineTriangle(random(width), random(height), random(width), random(height), random(width), random(height));
+    charTriangle(random(width), random(height), random(width), random(height), random(width), random(height));
   }
 }

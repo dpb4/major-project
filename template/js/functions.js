@@ -157,3 +157,22 @@ function charLineCircle(x, y, r, char = currentStroke) {
     lastAngle = angle;
   }
 }
+
+function charTriangle(x1, y1, x2, y2, x3, y3) {
+  let ys = [y1, y2, y3];
+  let xs = [x1, x2, x3];
+  console.log(xs, ys);
+
+  let maxY = max(ys);
+  let minY = min(ys);
+
+  let maxYPoint = [xs[ys.indexOf(maxY)], maxY];
+  ys.splice(ys.indexOf(maxYPoint[1]), 1);
+  xs.splice(ys.indexOf(maxYPoint[1]), 1);
+  let minYPoint = [xs[ys.indexOf(minY)], minY];
+  ys.splice(ys.indexOf(minYPoint[1]), 1);
+  xs.splice(ys.indexOf(minYPoint[1]), 1);
+  let midPoint = [xs, ys];
+
+  console.log(maxYPoint, minYPoint, midPoint);
+}
