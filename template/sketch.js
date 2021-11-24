@@ -23,10 +23,9 @@ function setup() {
   //   charStroke(i/width);
   //   charLine(i, 0, i, height);
   // }
-  for (let i = 0; i < 1; i++) {
-    charStroke(1);
-    charLineTriangle(random(width), random(height), random(width), random(height), random(width), random(height));
-  }
+  // for (let i = 0; i < 1; i++) {
+  //   charLineTriangle(random(width), random(height), random(width), random(height), random(width), random(height));
+  // }
 }
 
 function draw() {
@@ -39,8 +38,9 @@ function draw() {
 function keyPressed() {
   charBackground(0);
   for (let i = 0; i < 1; i++) {
-    charStroke(1);
-    charLineTriangle(random(width), random(height), random(width), random(height), random(width), random(height));
-    charTriangle(random(width), random(height), random(width), random(height), random(width), random(height));
+    charStroke(0.3);
+    let args = [random(width), random(height), random(width), random(height), random(width), random(height)];
+    // charLineTriangle(args[0], args[1], args[2], args[3], args[4], args[5]);
+    charTriangle(args[0], args[1], args[2], args[3], args[4], args[5]);
   }
 }

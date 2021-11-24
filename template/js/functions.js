@@ -122,11 +122,9 @@ function charLine(x1, y1, x2, y2, char = currentStroke) {
     let roundingOff = 0.0001;
     let points = [];
 
-    for (let i = 0; i < d*2 + 2; i += 2) {
-      points.push(lerp(x1 + roundingOff, x2 + roundingOff, i/2/d));
-      points.push(lerp(y1 + roundingOff, y2 + roundingOff, i/2/d));
-
-      charPoint(points[i], points[i+1], char);
+    for (let i = 0; i < d + 1; i++) {
+      points.push([lerp(x1 + roundingOff, x2 + roundingOff, i/d), lerp(y1 + roundingOff, y2 + roundingOff, i/d)]);
+      charPoint(points[i][0], points[i][1], char);
     }
 
     return points;
@@ -158,21 +156,35 @@ function charLineCircle(x, y, r, char = currentStroke) {
   }
 }
 
+function horizontalCharLine(y, x1, x2) {
+  // TODO
+}
+
+function maxMinOfPoints(points, maxmin) {
+  // TODO
+  if (maxmin === 'max') {
+
+  } else if (maxmin === 'min') {
+
+  }
+}
+
 function charTriangle(x1, y1, x2, y2, x3, y3) {
-  let ys = [y1, y2, y3];
-  let xs = [x1, x2, x3];
-  console.log(xs, ys);
+  // TODO
+  let points = [[x1, y1], [x2, y2], [x3, y3]];
+  // sort the points by descending y value
+  points.sort((a, b) => b[1]-a[1]);
 
-  let maxY = max(ys);
-  let minY = min(ys);
+  let lineMaxMin = charLine(points[0][0], points[0][1], points[2][0], points[2][1]);
+  console.log(lineMaxMin);
 
-  let maxYPoint = [xs[ys.indexOf(maxY)], maxY];
-  ys.splice(ys.indexOf(maxYPoint[1]), 1);
-  xs.splice(ys.indexOf(maxYPoint[1]), 1);
-  let minYPoint = [xs[ys.indexOf(minY)], minY];
-  ys.splice(ys.indexOf(minYPoint[1]), 1);
-  xs.splice(ys.indexOf(minYPoint[1]), 1);
-  let midPoint = [xs, ys];
+  if (points[1][0] < points[2][0]) {
+    // take min of maxmin line
+  } else {
+    // take max of maxmin line
+  }
+  charPoint(points[0][0], points[0][1], '0');
+  charPoint(points[1][0], points[1][1], '0');
+  charPoint(points[2][0], points[2][1], '0');
 
-  console.log(maxYPoint, minYPoint, midPoint);
 }
