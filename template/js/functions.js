@@ -109,10 +109,16 @@ function screen2Char(x, y) {
   return [floor(x/charWidth), floor(y/charHeight)];
 }
 
-function charPoint(x, y, char = currentStroke) {
-  if (x >= 0 && x <= windowWidth && y >= 0 && y <= windowHeight) {
-    let p = screen2Char(x, y);
-    outBlock[p[0]][p[1]] = char;
+function charPoint(x, y, char = currentStroke, mode = 'SCREEN') {
+  if (mode === 'SCREEN') {
+    if (x >= 0 && x <= windowWidth && y >= 0 && y <= windowHeight) {
+      let p = screen2Char(x, y);
+      outBlock[p[0]][p[1]] = char;
+    }
+  } else if (mode === 'CHAR') {
+    if (x >= 0 && x < resX && y >= 0 && y < resY) { 
+      outBlock[floor(x)][floor(y)] = char;
+    }
   }
 }
 
@@ -123,8 +129,8 @@ function charLine(x1, y1, x2, y2, char = currentStroke) {
     let points = [];
 
     for (let i = 0; i < d + 1; i++) {
-      points.push([lerp(x1 + roundingOff, x2 + roundingOff, i/d), lerp(y1 + roundingOff, y2 + roundingOff, i/d)]);
-      charPoint(points[i][0], points[i][1], char);
+      points.push(screen2Char(lerp(x1 + roundingOff, x2 + roundingOff, i/d), lerp(y1 + roundingOff, y2 + roundingOff, i/d)));
+      charPoint(points[i][0], points[i][1], char, 'CHAR');
     }
 
     return points;
