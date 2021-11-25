@@ -123,12 +123,12 @@ function charPoint(x, y, char = currentStroke, mode = 'SCREEN') {
 }
 
 function charLine(x1, y1, x2, y2, char = currentStroke) {
-  let d = Math.max(Math.abs(x2-x1), Math.abs(y2-y1));
+  let d = (max(abs(x2-x1)/charWidth, abs(y2-y1)/charHeight));
   if (d !== 0) {
     let roundingOff = 0.0001;
     let points = [];
 
-    for (let i = 0; i < d + 1; i++) {
+    for (let i = 0; i < floor(d) + 1; i++) {
       points.push(screen2Char(lerp(x1 + roundingOff, x2 + roundingOff, i/d), lerp(y1 + roundingOff, y2 + roundingOff, i/d)));
       charPoint(points[i][0], points[i][1], char, 'CHAR');
     }
