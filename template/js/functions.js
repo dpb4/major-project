@@ -1,4 +1,4 @@
-// TODO: circle, ellipse?, filled trianlge, filled rectangle
+// TODO: circle, ellipse?, filled trianlge, filled rectangle, change html text element to be instantiated from here (createP())
 
 let outBlock = [];
 let font;
@@ -123,7 +123,7 @@ function charPoint(x, y, char = currentStroke, mode = 'SCREEN') {
 }
 
 function charLine(x1, y1, x2, y2, char = currentStroke) {
-  let d = (max(abs(x2-x1)/charWidth, abs(y2-y1)/charHeight));
+  let d = max(abs(x2-x1)/charWidth, abs(y2-y1)/charHeight);
   if (d !== 0) {
     let roundingOff = 0.0001;
     let points = [];
@@ -167,12 +167,31 @@ function horizontalCharLine(y, x1, x2) {
 }
 
 function maxMinOfPoints(points, maxmin) {
+  let yMap = new Map();
   // TODO
-  if (maxmin === 'max') {
-
-  } else if (maxmin === 'min') {
-
+  if (maxmin === 'MAX') {
+    for (let i = 0; i < points.length; i++) {
+      if (yMap.has(points[i][1])) {
+        yMap.set(points[i][1], max(yMap.get(points[i][1]), points[i][0]));
+      } else {
+        yMap.set(points[i][1], points[i][0]);
+      }
+    }
+  } else if (maxmin === 'MIN') {
+    for (let i = 0; i < points.length; i++) {
+      if (yMap.has(points[i][1])) {
+        yMap.set(points[i][1], min(yMap.get(points[i][1]), points[i][0]));
+      } else {
+        yMap.set(points[i][1], points[i][0]);
+      }
+    }
   }
+
+  let out = [];
+  for (let [key, value] of yMap) {
+    out.push(value);
+  }
+  return out.reverse();
 }
 
 function charTriangle(x1, y1, x2, y2, x3, y3) {
@@ -182,11 +201,23 @@ function charTriangle(x1, y1, x2, y2, x3, y3) {
   points.sort((a, b) => b[1]-a[1]);
 
   let lineMaxMin = charLine(points[0][0], points[0][1], points[2][0], points[2][1]);
-  console.log(lineMaxMin);
+  // console.log(lineMaxMin);
 
+  let minP = screen2Char(points[2][0], points[2][1]);
   if (points[1][0] < points[2][0]) {
+    console.log("minning", minP);
     // take min of maxmin line
+    let test = maxMinOfPoints(lineMaxMin, "MIN");
+    for (let i = 0; i < test.length; i++) {
+      charPoint(test[i], i + minP[1], '#', 'CHAR');
+    }
   } else {
+    console.log("maxing", minP);
+    // take min of maxmin line
+    let test = maxMinOfPoints(lineMaxMin, "MAX");
+    for (let i = 0; i < test.length; i++) {
+      charPoint(test[i], i + minP[1], '#', 'CHAR');
+    }
     // take max of maxmin line
   }
   charPoint(points[0][0], points[0][1], '0');
