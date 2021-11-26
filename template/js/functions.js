@@ -191,37 +191,40 @@ function maxMinOfPoints(points, maxmin) {
   for (let [key, value] of yMap) {
     out.push(value);
   }
-  return out.reverse();
+  return out;
 }
-
+let lp;
 function charTriangle(x1, y1, x2, y2, x3, y3) {
   // TODO
   let points = [[x1, y1], [x2, y2], [x3, y3]];
   // sort the points by descending y value
   points.sort((a, b) => b[1]-a[1]);
-
-  let lineMaxMin = charLine(points[0][0], points[0][1], points[2][0], points[2][1]);
-  // console.log(lineMaxMin);
+  
+  let lineMaxMin = charLine(points[2][0], points[2][1], points[0][0], points[0][1]);
+  console.log(lineMaxMin);
 
   let minP = screen2Char(points[2][0], points[2][1]);
-  if (points[1][0] < points[2][0]) {
-    console.log("minning", minP);
-    // take min of maxmin line
-    let test = maxMinOfPoints(lineMaxMin, "MIN");
-    for (let i = 0; i < test.length; i++) {
-      charPoint(test[i], i + minP[1], '#', 'CHAR');
-    }
-  } else {
-    console.log("maxing", minP);
-    // take min of maxmin line
-    let test = maxMinOfPoints(lineMaxMin, "MAX");
-    for (let i = 0; i < test.length; i++) {
-      charPoint(test[i], i + minP[1], '#', 'CHAR');
-    }
-    // take max of maxmin line
-  }
   charPoint(points[0][0], points[0][1], '0');
   charPoint(points[1][0], points[1][1], '0');
   charPoint(points[2][0], points[2][1], '0');
+  
+  if (points[1][0] < points[2][0]) {
+    console.log("minning", points);
+    // take min of maxmin line
 
+    let test = maxMinOfPoints(lineMaxMin, "MIN");
+
+    for (let i = 0; i < test.length; i++) {
+      charPoint(test[i], i + points[2][1]/charHeight, '#', 'CHAR');
+    }
+  } else {
+    console.log("maxing", points);
+    // take max of maxmin line
+
+    let test = maxMinOfPoints(lineMaxMin, "MAX");
+
+    for (let i = 0; i < test.length; i++) {
+      charPoint(test[i], i + points[2][1]/charHeight, '#', 'CHAR');
+    }
+  }
 }
