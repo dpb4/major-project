@@ -109,6 +109,13 @@ function screen2Char(x, y) {
   return [floor(x/charWidth), floor(y/charHeight)];
 }
 
+/**
+ * 
+ * @param {number} x - the x coordinate of the point
+ * @param {number} y - the y coordinate of the point
+ * @param {string} [char] - optional - the specific character to put on the point. if not included, it will use currentStroke
+ * @param {string} [mode] - optional - either "SCREEN" or "CHAR". "SCREEN" (default) uses the x and y as pixel coordinates. "CHAR" uses them as character coordinates
+ */
 function charPoint(x, y, char = currentStroke, mode = 'SCREEN') {
   if (mode === 'SCREEN') {
     if (x >= 0 && x <= windowWidth && y >= 0 && y <= windowHeight) {
@@ -166,9 +173,27 @@ function horizontalCharLine(y, x1, x2) {
   // TODO
 }
 
+function sortByY(points) {
+  let yMap = new Map();
+
+  for (let i = 0; i < points.length; i++) {
+    if (yMap.has(points[i][1])) {
+      yMap.get(points[i][1]).push(points[i][0]);
+    } else {
+      yMap.set(points[i][1], [points[i][0]]);
+    }
+  }
+
+  // let out = [];
+  // for (let [key, value] of yMap) {
+  //   out.push([key, value]);
+  // }
+  return yMap;
+}
+
 function maxMinOfPoints(points, maxmin) {
   let yMap = new Map();
-  // TODO
+  // TODO repeated code
   if (maxmin === 'MAX') {
     for (let i = 0; i < points.length; i++) {
       if (yMap.has(points[i][1])) {
@@ -201,7 +226,7 @@ function charTriangle(x1, y1, x2, y2, x3, y3) {
   points.sort((a, b) => b[1]-a[1]);
   
   let lineMaxMin = charLine(points[2][0], points[2][1], points[0][0], points[0][1]);
-  console.log(lineMaxMin);
+  console.log(sortByY(lineMaxMin));
 
   let minP = screen2Char(points[2][0], points[2][1]);
   charPoint(points[0][0], points[0][1], '0');
@@ -209,7 +234,7 @@ function charTriangle(x1, y1, x2, y2, x3, y3) {
   charPoint(points[2][0], points[2][1], '0');
   
   if (points[1][0] < points[2][0]) {
-    console.log("minning", points);
+    // console.log("minning", points);
     // take min of maxmin line
 
     let test = maxMinOfPoints(lineMaxMin, "MIN");
@@ -218,13 +243,31 @@ function charTriangle(x1, y1, x2, y2, x3, y3) {
       charPoint(test[i], i + points[2][1]/charHeight, '#', 'CHAR');
     }
   } else {
-    console.log("maxing", points);
+    // console.log("maxing", points);
     // take max of maxmin line
 
     let test = maxMinOfPoints(lineMaxMin, "MAX");
 
     for (let i = 0; i < test.length; i++) {
       charPoint(test[i], i + points[2][1]/charHeight, '#', 'CHAR');
+    }
+  }
+}
+
+function fillTriangle(points, minY, maxY, char) {
+  for (let y = minY; y < maxY; y++) {
+    let curLine = points.get(y);
+    // sort in ascending order
+    curLine.sort((a, b) => a-b);
+
+    if (curLine.length === 1) {
+      curLine.push(curLine[0]);
+    }
+
+    for (let x = curLine[0]; x < curLine[curLine.length-1]; x++) {
+      if (!curLine.includes(x)) {
+        charPoint(x, y, char, 'CHAR');
+      }
     }
   }
 }
