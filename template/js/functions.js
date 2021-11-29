@@ -110,7 +110,7 @@ function screen2Char(x, y) {
 }
 
 /**
- * 
+ * Places a point at a given location on the text canvas.
  * @param {number} x - the x coordinate of the point
  * @param {number} y - the y coordinate of the point
  * @param {string} [char] - optional - the specific character to put on the point. if not included, it will use currentStroke
@@ -158,15 +158,18 @@ function charLineRect(x, y, w, h, char = currentStroke) {
   charLine(x    , y + h, x + w, y + h, char);
 }
 
-function charLineCircle(x, y, r, char = currentStroke) {
-  let verts = floor(r/10 + 4); // subject to change
+function charLineCircle(x, y, radius, char = currentStroke) {
+  let verts = floor(radius/10 + 4); // subject to change
   let angStep = 1 / verts * TWO_PI;
+  let points = [];
   for (let i = 0; i < verts; i++) {
     let angle = i * angStep;
 
-    charLine(x + r*cos(angle), y + r*sin(angle), x + r*cos(angle - angStep), y + r*sin(angle - angStep), char);
+    points.push(charLine(x + radius*cos(angle), y + radius*sin(angle), x + radius*cos(angle - angStep), y + radius*sin(angle - angStep), char));
     lastAngle = angle;
   }
+
+  return points;
 } 
 
 function sortByY(points) {
@@ -226,10 +229,10 @@ function charTriangle(x1, y1, x2, y2, x3, y3) {
   charPoint(points[1][0], points[1][1], '0');
   charPoint(points[2][0], points[2][1], '0');
 
-  fillTriangle(sortByY(lines.flat()), points[2][1], points[0][1], currentFill);
+  fillShape(sortByY(lines.flat()), points[2][1], points[0][1], currentFill);
 }
 
-function fillTriangle(points, minY, maxY, char) {
+function fillShape(points, char) {
   for (let [y, xs] of points)  {
     // sort in ascending order 
     xs.sort((a, b) => a-b);
@@ -245,4 +248,19 @@ function fillTriangle(points, minY, maxY, char) {
       }
     }
   }
+}
+
+function gradientTest() {
+  for (let i = 0; i < width; i += charWidth) {
+    charStroke(i/width);
+    charLine(i, 0, i, height);
+  }
+}
+
+function charCircle(x, y, radius) {
+  let points = charLineCircle(x, y, radius, currentStroke);
+
+  points = sortByY(points.flat());
+  fillShape(points, currentFill);
+  // console.log(points);
 }

@@ -24,20 +24,14 @@ function setup() {
   p4 = random(height);
 
   charStroke(0.5);
-  // for (let i = 0; i < width; i += charWidth) {
-  //   charStroke(i/width);
-  //   charLine(i, 0, i, height);
-  // }
-  // for (let i = 0; i < 1; i++) {
-  //   charLineTriangle(random(width), random(height), random(width), random(height), random(width), random(height));
-  // }
-  console.log(CENTER);
 }
 
 function draw() {
   // your code goes here!
   charBackground();
-  charTriangle(mouseX, mouseY, p1, p2, p3, p4);
+  // charLineCircle(mouseX, mouseY, dist(mouseX, mouseY, width/2, height/2));
+  charCircle(mouseX, mouseY, dist(mouseX, mouseY, width/2, height/2));
+
 
   printOut();
 }

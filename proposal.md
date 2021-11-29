@@ -6,27 +6,27 @@ An extension to p5.js that uses ascii text to draw instead of pixels. I plan to 
 
 ## Must have list
 
-- working line function
-- filled primitive polygons (triangle, rectangle, circle, maybe ellipse);
-- background function
-- fill function
-- stroke function
-- support for either character specific "colours" OR a gradient of ascii characters based on their apparent density
-- basic text function
+- [x] working line function
+- [ ] filled primitive polygons (triangle, rectangle, circle, maybe ellipse);
+- [x] background function
+- [x] fill function
+- [x] stroke function
+- [x] support for either character specific "colours" OR a gradient of ascii characters based on their apparent density
+- [ ] basic text function
 
 ## Nice to have list
 
-- GOOD line function
-- camera input
-- support for 3d primitives, mainly cube
-- support for 3d models (this could be a stretch, but I do have a while to work on it), the timeline of which would look like:
-    - basic wireframe
-    - wireframe with culling
-    - shading with surface normals
-    - smooth shading with interpolation
-- text function with some kind of font (not just plain text)
-- thick lines (strokeWeight)
-- gpu support
+- [ ] GOOD line function
+- [x] camera input
+- [ ] support for 3d primitives, mainly cube
+- [ ] support for 3d models (this could be a stretch, but I do have a while to work on it), the timeline of which would look like:
+    - [ ] basic wireframe
+    - [ ] wireframe with culling
+    - [ ] shading with surface normals
+    - [ ] smooth shading with interpolation
+- [ ] text function with some kind of font (not just plain text)
+- [ ] thick lines (strokeWeight)
+- [ ] gpu support
 
 ---
 
