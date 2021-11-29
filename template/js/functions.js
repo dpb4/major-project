@@ -167,11 +167,7 @@ function charLineCircle(x, y, r, char = currentStroke) {
     charLine(x + r*cos(angle), y + r*sin(angle), x + r*cos(angle - angStep), y + r*sin(angle - angStep), char);
     lastAngle = angle;
   }
-}
-
-function horizontalCharLine(y, x1, x2) {
-  // TODO
-}
+} 
 
 function sortByY(points) {
   let yMap = new Map();
@@ -184,10 +180,6 @@ function sortByY(points) {
     }
   }
 
-  // let out = [];
-  // for (let [key, value] of yMap) {
-  //   out.push([key, value]);
-  // }
   return yMap;
 }
 
@@ -218,54 +210,37 @@ function maxMinOfPoints(points, maxmin) {
   }
   return out;
 }
-let lp;
+
 function charTriangle(x1, y1, x2, y2, x3, y3) {
-  // TODO
   let points = [[x1, y1], [x2, y2], [x3, y3]];
   // sort the points by descending y value
   points.sort((a, b) => b[1]-a[1]);
   
-  let lineMaxMin = charLine(points[2][0], points[2][1], points[0][0], points[0][1]);
-  console.log(sortByY(lineMaxMin));
+  let lines = [
+    charLine(points[2][0], points[2][1], points[0][0], points[0][1]), 
+    charLine(points[2][0], points[2][1], points[1][0], points[1][1]), 
+    charLine(points[1][0], points[1][1], points[0][0], points[0][1])
+  ];
 
-  let minP = screen2Char(points[2][0], points[2][1]);
   charPoint(points[0][0], points[0][1], '0');
   charPoint(points[1][0], points[1][1], '0');
   charPoint(points[2][0], points[2][1], '0');
-  
-  if (points[1][0] < points[2][0]) {
-    // console.log("minning", points);
-    // take min of maxmin line
 
-    let test = maxMinOfPoints(lineMaxMin, "MIN");
-
-    for (let i = 0; i < test.length; i++) {
-      charPoint(test[i], i + points[2][1]/charHeight, '#', 'CHAR');
-    }
-  } else {
-    // console.log("maxing", points);
-    // take max of maxmin line
-
-    let test = maxMinOfPoints(lineMaxMin, "MAX");
-
-    for (let i = 0; i < test.length; i++) {
-      charPoint(test[i], i + points[2][1]/charHeight, '#', 'CHAR');
-    }
-  }
+  fillTriangle(sortByY(lines.flat()), points[2][1], points[0][1], currentFill);
 }
 
 function fillTriangle(points, minY, maxY, char) {
-  for (let y = minY; y < maxY; y++) {
-    let curLine = points.get(y);
-    // sort in ascending order
-    curLine.sort((a, b) => a-b);
+  for (let [y, xs] of points)  {
+    // sort in ascending order 
+    xs.sort((a, b) => a-b);
 
-    if (curLine.length === 1) {
-      curLine.push(curLine[0]);
+    // make sure there is always a pair of points
+    if (xs.length === 1) {
+      xs.push(xs[0]);
     }
 
-    for (let x = curLine[0]; x < curLine[curLine.length-1]; x++) {
-      if (!curLine.includes(x)) {
+    for (let x = xs[0]; x < xs[xs.length-1]; x++) {
+      if (!xs.includes(x)) {
         charPoint(x, y, char, 'CHAR');
       }
     }
