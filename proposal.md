@@ -12,7 +12,7 @@ An extension to p5.js that uses ascii text to draw instead of pixels. I plan to 
 - [x] fill function
 - [x] stroke function
 - [x] support for either character specific "colours" OR a gradient of ascii characters based on their apparent density
-- [ ] basic text function
+- [x] basic text function
 
 ## Nice to have list
 
