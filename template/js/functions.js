@@ -225,34 +225,32 @@ function charTriangle(x1, y1, x2, y2, x3, y3) {
     charLine(points[1][0], points[1][1], points[0][0], points[0][1])
   ];
 
-  charPoint(points[0][0], points[0][1], '0');
-  charPoint(points[1][0], points[1][1], '0');
-  charPoint(points[2][0], points[2][1], '0');
-
-  fillShape(sortByY(lines.flat()), points[2][1], points[0][1], currentFill);
+  fillShape(sortByY(lines.flat()), currentFill);
 }
 
 function charRect(x, y, w, h) {
   if (w < 0) {
-    x += w;
+    console.log(x, w, x + w);
     w = -w;
+    x -= w;
+    console.log(x, w, x + w);
   }
   if (h < 0) {
-    y += h;
     h = -h;
+    y -= h;
   }
-  charLine(x, y, x + w, y    );
-  charLine(x, y, x    , y + h);
-
-  let east = sortByY(charLine(x + w, y    , x + w, y + h));
-  let south = sortByY(charLine(x    , y + h, x + w, y + h));
 
   [x, y] = screen2Char(x, y);
   [w, h] = screen2Char(w, h);
 
-  for (let curY = y + 1; curY < y + h; curY++) {
-    for (let curX = x + 1; curX < x + w; curX++) {
-      charPoint(curX, curY, currentFill, "CHAR");
+  for (let curY = y; curY <= ceil(y + h); curY++) {
+    for (let curX = x; curX <= ceil(x + w); curX++) {
+      if (curY === y || curY === y + h || curX === x || curX === x + w) {
+        charPoint(curX, curY, currentStroke, "CHAR");
+      } else {
+        charPoint(curX, curY, currentFill, "CHAR");
+      }
+
     }
   }
 }
