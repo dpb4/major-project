@@ -5,6 +5,7 @@ let font;
 let resX, resY;
 let charWidth, charHeight;
 // NOT ALLOWED CHARACTERS: ()[]{}<>- `?&
+let notAllowedCharacters = '()[]{}<>- `?&';
 let gradients = [
   '.:=+*#%@',
   '.:;lIE8%',
@@ -286,4 +287,12 @@ function charCircle(x, y, radius) {
   points = sortByY(points.flat());
   fillShape(points, currentFill);
   // console.log(points);
+}
+
+function putText(text, x, y) {
+  for (let i = 0; i < text.length; i++) {
+    if (!notAllowedCharacters.includes(text[i])) {
+      charPoint(x + i*charWidth, y, text[i]);
+    }
+  }
 }
