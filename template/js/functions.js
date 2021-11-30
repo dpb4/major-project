@@ -232,6 +232,31 @@ function charTriangle(x1, y1, x2, y2, x3, y3) {
   fillShape(sortByY(lines.flat()), points[2][1], points[0][1], currentFill);
 }
 
+function charRect(x, y, w, h) {
+  if (w < 0) {
+    x += w;
+    w = -w;
+  }
+  if (h < 0) {
+    y += h;
+    h = -h;
+  }
+  charLine(x, y, x + w, y    );
+  charLine(x, y, x    , y + h);
+
+  let east = sortByY(charLine(x + w, y    , x + w, y + h));
+  let south = sortByY(charLine(x    , y + h, x + w, y + h));
+
+  [x, y] = screen2Char(x, y);
+  [w, h] = screen2Char(w, h);
+
+  for (let curY = y + 1; curY < y + h; curY++) {
+    for (let curX = x + 1; curX < x + w; curX++) {
+      charPoint(curX, curY, currentFill, "CHAR");
+    }
+  }
+}
+
 function fillShape(points, char) {
   for (let [y, xs] of points)  {
     // sort in ascending order 
