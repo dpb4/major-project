@@ -231,10 +231,10 @@ function charTriangle(x1, y1, x2, y2, x3, y3) {
 
 function charRect(x, y, w, h) {
   if (w < 0) {
-    console.log(x, w, x + w);
+    // console.log(w/charWidth, x/charWidth + w/charWidth);
     w = -w;
     x -= w;
-    console.log(x, w, x + w);
+    console.log(w/charWidth, x/charWidth + w/charWidth);
   }
   if (h < 0) {
     h = -h;
@@ -244,8 +244,8 @@ function charRect(x, y, w, h) {
   [x, y] = screen2Char(x, y);
   [w, h] = screen2Char(w, h);
 
-  for (let curY = y; curY <= ceil(y + h); curY++) {
-    for (let curX = x; curX <= ceil(x + w); curX++) {
+  for (let curY = y; curY <= y + h; curY++) {
+    for (let curX = x; curX <= x + w; curX++) {
       if (curY === y || curY === y + h || curX === x || curX === x + w) {
         charPoint(curX, curY, currentStroke, "CHAR");
       } else {
