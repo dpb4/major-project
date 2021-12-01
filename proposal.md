@@ -26,6 +26,8 @@ An extension to p5.js that uses ascii text to draw instead of pixels. I plan to 
     - [ ] smooth shading with interpolation
 - [ ] text function with some kind of font (not just plain text)
 - [ ] thick lines (strokeWeight)
+- [ ] rotate function
+- [ ] translate function
 - [ ] gpu support
 
 ---
