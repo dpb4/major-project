@@ -304,7 +304,6 @@ function charCircle(x, y, radius) {
 
   points = sortByY(points.flat());
   fillShape(points, currentFill);
-  // console.log(points);
 }
 
 function charEllipse(x, y, w, h) {
@@ -312,7 +311,6 @@ function charEllipse(x, y, w, h) {
 
   points = sortByY(points.flat());
   fillShape(points, currentFill);
-  // console.log(points);
 }
 
 function putText(text, x, y) {
