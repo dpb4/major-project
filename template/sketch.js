@@ -15,7 +15,7 @@ function setup() {
   background(0, 0);
   fill(255);
 
-  charSetup(24);
+  charSetup(12);
   charBackground(0);
   gradientStyle(2);
   p1 = random(width);
@@ -33,7 +33,8 @@ function draw() {
 
   // charCircle(mouseX, mouseY, dist(mouseX, mouseY, width/2, height/2));
   // charTriangle(mouseX, mouseY, p1, p2, p3, p4);
-  charRect(width/2, height/2, mouseX - width/2, mouseY - height/2);
+  // charRect(width/2, height/2, mouseX - width/2, mouseY - height/2);
+  charEllipse(width/2, height/2, mouseX - width/2, mouseY - height/2);
 
   printOut();
 }

@@ -173,6 +173,24 @@ function charLineCircle(x, y, radius, char = currentStroke) {
   return points;
 } 
 
+function charLineEllipse(x, y, w, h, char = currentStroke) {
+  w = abs(w);
+  h = abs(h);
+
+  let verts = floor(max(w, h)/10 + 4); // subject to change
+  let angStep = 1 / verts * TWO_PI;
+  let points = [];
+
+  for (let i = 0; i < verts; i++) {
+    let angle = i * angStep;
+
+    points.push(charLine(x + w*cos(angle), y + h*sin(angle), x + w*cos(angle - angStep), y + h*sin(angle - angStep), char));
+    lastAngle = angle;
+  }
+
+  return points;
+}
+
 function sortByY(points) {
   let yMap = new Map();
 
@@ -230,16 +248,16 @@ function charTriangle(x1, y1, x2, y2, x3, y3) {
 }
 
 function charRect(x, y, w, h) {
-  if (w < 0) {
-    // console.log(w/charWidth, x/charWidth + w/charWidth);
-    w = -w;
-    x -= w;
-    console.log(w/charWidth, x/charWidth + w/charWidth);
-  }
-  if (h < 0) {
-    h = -h;
-    y -= h;
-  }
+  // if (w < 0) {
+  //   console.log(w/charWidth, x/charWidth + w/charWidth);
+  //   w = -w;
+  //   x -= w;
+  //   console.log(w/charWidth, x/charWidth + w/charWidth);
+  // }
+  // if (h < 0) {
+  //   h = -h;
+  //   y -= h;
+  // }
 
   [x, y] = screen2Char(x, y);
   [w, h] = screen2Char(w, h);
@@ -283,6 +301,14 @@ function gradientTest() {
 
 function charCircle(x, y, radius) {
   let points = charLineCircle(x, y, radius, currentStroke);
+
+  points = sortByY(points.flat());
+  fillShape(points, currentFill);
+  // console.log(points);
+}
+
+function charEllipse(x, y, w, h) {
+  let points = charLineEllipse(x, y, w, h, currentStroke);
 
   points = sortByY(points.flat());
   fillShape(points, currentFill);

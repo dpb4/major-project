@@ -7,7 +7,7 @@ An extension to p5.js that uses ascii text to draw instead of pixels. I plan to 
 ## Must have list
 
 - [x] working line function
-- [ ] filled primitive polygons (triangle, rectangle, circle, maybe ellipse);
+- [x] filled primitive polygons (triangle, rectangle, circle, maybe ellipse);
 - [x] background function
 - [x] fill function
 - [x] stroke function
