@@ -12,6 +12,10 @@ let gradients = [
   '.\':!;LlIE9G8%',
 ];
 
+const cube = [
+  
+];
+
 let currentGradient = gradients[0];
 
 let currentFill = currentGradient[currentGradient.length-1];
