@@ -324,3 +324,98 @@ function putText(text, x, y) {
     }
   }
 }
+
+function matrixVectorMult(mat, vec) {
+  if (mat.length !== vec.length) {
+    throw "Rows do not match columns";
+  }
+  
+  let newVec = [...vec].fill(0);
+  
+  for (let i = 0; i < mat.length; i++) {
+    for (let j = 0; j < mat[i].length; j++) {
+      newVec[i] += mat[i][j] * vec[i];
+    }
+  }
+  
+  return newVec;
+}
+
+function createRotationMatrix(axis, angle) {
+  if (axis === 'x') {
+    return [
+      [1,           0,           0],
+      [0,  cos(angle), -sin(angle)],
+      [0,  sin(angle),  cos(angle)]
+    ];
+  } else if (axis === 'y') {
+    return [
+      [ cos(angle), 0,  sin(angle)],
+      [          0, 1,           0],
+      [-sin(angle), 0,  cos(angle)]
+    ];
+  } else if (axis === 'z') {
+    return [
+      [ cos(angle), -sin(angle), 0],
+      [ sin(angle),  cos(angle), 0],
+      [          0,           0, 1]
+    ];
+  }
+}
+
+function mat4(mat3) {
+  if (mat3.length !== 3 || mat3[0].length !== 3) {
+    throw "Input was not a 3x3 matrix";
+  }
+  for (let i = 0; i < 3; i++) {
+    mat3[i].push(0);
+  }
+  mat3.push([0, 0, 0, 1]);
+  return mat3;
+}
+
+function mat3(mat4) {
+  if (mat3.length !== 4 || mat3[0].length !== 4) {
+    throw "Input was not a 4x4 matrix";
+  }
+
+  for (let i = 0; i < 3; i++) {
+    mat4[i].pop();
+  }
+  mat4.pop();
+
+  return mat4;
+}
+
+function createIdentity(dimension) {
+  let out = new Array(dimension).fill(0).map(x => new Array(dimension).fill(0));
+
+  for (let i = 0; i < dimension; i++) {
+    out[i][i] = 1;
+  }
+
+  return out;
+}
+
+function vec4(vec3) {
+  
+}
+
+function vec3(vec4) {
+  
+}
+
+function logMat(mat) {
+  console.log(`Size: ${mat.length}x${mat[0].length}`);
+  let out = '';
+  
+  for (let i = 0; i < mat.length; i++) {
+    out += "| ";
+    for (let j = 0; j < mat[i].length; j++) {
+      out += mat[i][j];
+      out += ' ';
+    }
+    out += '|\n';
+  }
+  console.log(out);
+}
