@@ -397,15 +397,20 @@ function createIdentity(dimension) {
   return out;
 }
 
-function vec4(vec3) {
-  
+function setVecDimension(vec = [], d=4) {
+  if (vec.length > d) {
+    return vec.slice(0, d);
+  } else if (vec.length < d) {
+    let vl = vec.length;
+
+    for (let i = 0; i < d-vl; i++) {
+      vec.push(0);
+    }
+  }
+  return vec;
 }
 
-function vec3(vec4) {
-  
-}
-
-function logMat(mat) {
+function logMatrix(mat) {
   console.log(`Size: ${mat.length}x${mat[0].length}`);
   let out = '';
   

@@ -40,10 +40,10 @@ function setup() {
 }
 
 
-  // charCircle(mouseX, mouseY, dist(mouseX, mouseY, width/2, height/2));
-  // charTriangle(mouseX, mouseY, p1, p2, p3, p4);
-  // charRect(width/2, height/2, mouseX - width/2, mouseY - height/2);
-  // charEllipse(width/2, height/2, mouseX - width/2, mouseY - height/2);
+// charCircle(mouseX, mouseY, dist(mouseX, mouseY, width/2, height/2));
+// charTriangle(mouseX, mouseY, p1, p2, p3, p4);
+// charRect(width/2, height/2, mouseX - width/2, mouseY - height/2);
+// charEllipse(width/2, height/2, mouseX - width/2, mouseY - height/2);
 function draw() {
   // your code goes here!
   charBackground();
