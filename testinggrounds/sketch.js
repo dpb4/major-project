@@ -27,28 +27,30 @@ function setup() {
   charStroke(1);
   charFill(0.5);
   
+  charTranslate(width/2, height/2);
 }
 
 
-// charCircle(mouseX, mouseY, dist(mouseX, mouseY, width/2, height/2));
-// charTriangle(mouseX, mouseY, p1, p2, p3, p4);
-// charRect(width/2, height/2, mouseX - width/2, mouseY - height/2);
-// charEllipse(width/2, height/2, mouseX - width/2, mouseY - height/2);
+
 function draw() {
   // your code goes here!
   charBackground();
 
-  charRect(0, 0, mouseX, mouseY);
+  // charLineCircle(0, 0, dist(mouseX, mouseY, width/2, height/2));
+  // charTriangle(mouseX, mouseY, p1, p2, p3, p4); 
+  // charEllipse(0, 0, mouseX - width/2, mouseY - height/2);
+  charRect(0, 0, mouseX - width/2, mouseY - height/2);
+  // console.log(charLine(0, 0, mouseX, mouseY));
   printOut();
 
   
 }
 
 function keyPressed() {
-  p1 = random(width);
-  p2 = random(height);
-  p3 = random(width);
-  p4 = random(height);
+  p1 = random(-width/2, width/2);
+  p2 = random(-height/2, height/2);
+  p3 = random(-width/2, width/2);
+  p4 = random(-height /2, height/2);
 
   // putText("testing", random(width), random(height));
 }
