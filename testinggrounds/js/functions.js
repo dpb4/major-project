@@ -12,8 +12,32 @@ let gradients = [
   '.\':!;LlIE9G8%',
 ];
 
-const cube = [
-  
+let currentTranslation = [0, 0];
+
+const cubeVertices = [
+  0, 0, 0,
+  0, 0, 1,
+  0, 1, 0,
+  0, 1, 1,
+  1, 0, 0,
+  1, 0, 1,
+  1, 1, 0,
+  1, 1, 1
+];
+
+const cubeEdges = [
+  0, 1,
+  0, 2,
+  0, 4,
+  1, 3,
+  1, 5,
+  2, 3,
+  2, 6,
+  3, 7,
+  4, 5,
+  4, 6,
+  5, 7,
+  6, 7
 ];
 
 let currentGradient = gradients[0];
@@ -112,6 +136,10 @@ function charBackground(f = 0) {
 
 function screen2Char(x, y) {
   return [floor(x/charWidth), floor(y/charHeight)];
+}
+
+function charTranslate(x, y) {
+  currentTranslation = [x, y];
 }
 
 /**
@@ -408,6 +436,10 @@ function setVecDimension(vec = [], d=4) {
     }
   }
   return vec;
+}
+
+function getCubeVertices(size) {
+  return cubeVertices.map(x => x * size);
 }
 
 function logMatrix(mat) {
