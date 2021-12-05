@@ -3,5 +3,6 @@ CS30 Major Project
 
 # Current Sub-Projects
 - [Ascii Camera](texttest)
-- [Gradient test/miscellaneous testing](template)
 - [Mouse Chaser](chaser)
+- [Gradient test/template](template)
+- [Testing grounds (probably broken)](testinggrounds)
