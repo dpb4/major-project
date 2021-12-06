@@ -364,7 +364,7 @@ function matrixVectorMult(mat, vec) {
   
   for (let i = 0; i < mat.length; i++) {
     for (let j = 0; j < mat[i].length; j++) {
-      newVec[i] += mat[i][j] * vec[i];
+      newVec[i] += mat[i][j] * vec[j];
     }
   }
   
@@ -425,6 +425,17 @@ function createIdentity(dimension) {
   }
 
   return out;
+}
+
+function createTranslation(dimension) {
+  let m = createIdentity(dimension);
+  let lastIndex = m.length-1;
+
+  for (let i = 0; i < dimension-1; i++) {
+    m[i][lastIndex] = arguments[i+1];
+  }
+
+  return m;
 }
 
 function setVecDimension(vec = [], d=4) {
