@@ -371,6 +371,25 @@ function matrixVectorMult(mat, vec) {
   return newVec;
 }
 
+function matrixDot() {
+  let dimension = [arguments[0].length, arguments[0][0].length];
+  let newM = new Array(dimension[0]).map(x => new Array(dimension[1]).fill(0));
+
+  // input checking
+  for (let i = 0; i < arguments.length; i++) {
+    if (arguments[i].length !== dimension[1] || arguments[i][0].length !== dimension[0]) {
+      throw "Not all matrices are the right size";
+    }
+  }
+
+  // passed:
+  for (let i = 0; i < dimension[0]; i++) {
+    for (let j = 0; j < dimension[1]; j++) {
+      // newM[i][j] += 
+    }
+  }
+}
+
 function createRotationMatrix(axis, angle) {
   if (axis === 'x') {
     return [
@@ -394,6 +413,7 @@ function createRotationMatrix(axis, angle) {
 }
 
 function mat4(mat3) {
+  // TODO redo this, it isnt helpful
   if (mat3.length !== 3 || mat3[0].length !== 3) {
     throw "Input was not a 3x3 matrix";
   }
