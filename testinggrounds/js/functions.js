@@ -371,23 +371,51 @@ function matrixVectorMult(mat, vec) {
   return newVec;
 }
 
+function getColumn(m, col) {
+  let out = [];
+
+  for (let i = 0; i < m.length; i++) {
+    out.push(m[i][col]);
+  }
+
+  return out;
+}
+function vectorDot(v1, v2) {
+  if (v1.length !== v2.length) {
+    console.log(v1, v2);
+    throw "Vectors do not have matching length";
+  }
+
+  let num = 0;
+
+  for (let i = 0; i < v1.length; i++) {
+    num += v1[i] * v2[i];
+  }
+
+  return num;
+}
+
 function matrixDot() {
   let dimension = [arguments[0].length, arguments[0][0].length];
-  let newM = new Array(dimension[0]).map(x => new Array(dimension[1]).fill(0));
+  let minDim = min(dimension);
+  let newM = new Array(minDim).fill(0).map(x => new Array(minDim).fill(0));
 
-  // input checking
-  for (let i = 0; i < arguments.length; i++) {
-    if (arguments[i].length !== dimension[1] || arguments[i][0].length !== dimension[0]) {
-      throw "Not all matrices are the right size";
-    }
-  }
+  // // input checking
+  // for (let i = 0; i < arguments.length; i++) {
+  //   if (arguments[i].length !== dimension[1] || arguments[i][0].length !== dimension[0]) {
+  //     throw "Not all matrices are the right size";
+  //   }
+  // }
 
+  // console.log(newM, minDim);
   // passed:
-  for (let i = 0; i < dimension[0]; i++) {
-    for (let j = 0; j < dimension[1]; j++) {
-      // newM[i][j] += 
+  for (let ny = 0; ny < minDim; ny++) {
+    for (let nx = 0; nx < minDim; nx++) {
+      newM[nx][ny] = vectorDot(arguments[0][nx], getColumn(arguments[1], [ny]));
     }
   }
+
+  return newM;
 }
 
 function createRotationMatrix(axis, angle) {
@@ -476,14 +504,28 @@ function getCubeVertices(size) {
 }
 
 function logMatrix(mat) {
+  // TODO fix spacing
   console.log(`Size: ${mat.length}x${mat[0].length}`);
+
+  let maxLength = -1;
+  for (let i = 0; i < mat.length; i++) {
+    for (let j = 0; j < mat[i].length; j++) {
+      maxLength = max(mat[i][j].toFixed(1).length, maxLength);
+    }
+  }
+  console.log(maxLength);
   let out = '';
   
   for (let i = 0; i < mat.length; i++) {
     out += "| ";
     for (let j = 0; j < mat[i].length; j++) {
-      out += mat[i][j];
-      out += ' ';
+      out += mat[i][j].toFixed(1);
+
+      if (j !== mat[i].length-1) {
+        out += ' '.repeat(maxLength - mat[i][j].toFixed(1).length + 1);
+      } else {
+        out += ' ';
+      }
     }
     out += '|\n';
   }
