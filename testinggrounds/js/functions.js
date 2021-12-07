@@ -1,4 +1,4 @@
-// TODO: circle, ellipse?, filled trianlge, filled rectangle, change html text element to be instantiated from here (createP())
+// TODO: change html text element to be instantiated from here (createP())
 
 let outBlock = [];
 let font;
@@ -237,35 +237,6 @@ function sortByY(points) {
   return yMap;
 }
 
-// currently not in use (wasn't working)
-// function maxMinOfPoints(points, maxmin) {
-//   let yMap = new Map();
-//   // TODO repeated code
-//   if (maxmin === 'MAX') {
-//     for (let i = 0; i < points.length; i++) {
-//       if (yMap.has(points[i][1])) {
-//         yMap.set(points[i][1], max(yMap.get(points[i][1]), points[i][0]));
-//       } else {
-//         yMap.set(points[i][1], points[i][0]);
-//       }
-//     }
-//   } else if (maxmin === 'MIN') {
-//     for (let i = 0; i < points.length; i++) {
-//       if (yMap.has(points[i][1])) {
-//         yMap.set(points[i][1], min(yMap.get(points[i][1]), points[i][0]));
-//       } else {
-//         yMap.set(points[i][1], points[i][0]);
-//       }
-//     }
-//   }
-
-//   let out = [];
-//   for (let [key, value] of yMap) {
-//     out.push(value);
-//   }
-//   return out;
-// }
-
 function charTriangle(x1, y1, x2, y2, x3, y3) {
   let points = [[x1, y1], [x2, y2], [x3, y3]];
   // sort the points by descending y value
@@ -396,6 +367,7 @@ function vectorDot(v1, v2) {
 }
 
 function matrixDot() {
+  // TODO support for multiple
   let dimension = [arguments[0].length, arguments[0][0].length];
   let minDim = min(dimension);
   let newM = new Array(minDim).fill(0).map(x => new Array(minDim).fill(0));
@@ -465,7 +437,7 @@ function mat3(mat4) {
   return mat4;
 }
 
-function createIdentity(dimension) {
+function createIdentityMatrix(dimension) {
   let out = new Array(dimension).fill(0).map(x => new Array(dimension).fill(0));
 
   for (let i = 0; i < dimension; i++) {
@@ -475,8 +447,8 @@ function createIdentity(dimension) {
   return out;
 }
 
-function createTranslation(dimension, args) {
-  let m = createIdentity(dimension);
+function createTranslationMatrix(dimension, args) {
+  let m = createIdentityMatrix(dimension);
   let lastIndex = m.length-1;
 
   for (let i = 0; i < dimension-1; i++) {
@@ -486,8 +458,8 @@ function createTranslation(dimension, args) {
   return m;
 }
 
-function createScale(dimension, args) {
-  let m = createIdentity(dimension);
+function createScaleMatrix(dimension, args) {
+  let m = createIdentityMatrix(dimension);
 
   for (let i = 0; i < arguments.length-1; i++) {
     m[i][i] = arguments[i+1];
