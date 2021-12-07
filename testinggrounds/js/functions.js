@@ -475,12 +475,22 @@ function createIdentity(dimension) {
   return out;
 }
 
-function createTranslation(dimension) {
+function createTranslation(dimension, args) {
   let m = createIdentity(dimension);
   let lastIndex = m.length-1;
 
   for (let i = 0; i < dimension-1; i++) {
     m[i][lastIndex] = arguments[i+1];
+  }
+
+  return m;
+}
+
+function createScale(dimension, args) {
+  let m = createIdentity(dimension);
+
+  for (let i = 0; i < arguments.length-1; i++) {
+    m[i][i] = arguments[i+1];
   }
 
   return m;
