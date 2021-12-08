@@ -2,3 +2,5 @@ http://anthony.liekens.net/index.php/Computers/RenderingTutorial3DTo2D
 http://www.songho.ca/opengl/gl_projectionmatrix.html
 http://www.songho.ca/opengl/gl_matrix.html
 https://learnopengl.com/Getting-started/Transformations
+https://www.scratchapixel.com/lessons/3d-basic-rendering/perspective-and-orthographic-projection-matrix/opengl-perspective-projection-matrix
+https://www.scratchapixel.com/lessons/3d-basic-rendering/perspective-and-orthographic-projection-matrix/building-basic-perspective-projection-matrix

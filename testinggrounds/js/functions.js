@@ -513,3 +513,7 @@ function logMatrix(mat) {
   }
   console.log(out);
 }
+
+function generateProjectionMatrix(fov, ratio, nearClip, farClip) {
+  
+}
