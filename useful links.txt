@@ -4,3 +4,4 @@ http://www.songho.ca/opengl/gl_matrix.html
 https://learnopengl.com/Getting-started/Transformations
 https://www.scratchapixel.com/lessons/3d-basic-rendering/perspective-and-orthographic-projection-matrix/opengl-perspective-projection-matrix
 https://www.scratchapixel.com/lessons/3d-basic-rendering/perspective-and-orthographic-projection-matrix/building-basic-perspective-projection-matrix
+https://gamedev.net/forums/topic/686950-what-makes-a-vertical-fov-from-a-horizontal-one/5334971/

@@ -514,6 +514,19 @@ function logMatrix(mat) {
   console.log(out);
 }
 
-function generateProjectionMatrix(fov, ratio, nearClip, farClip) {
-  
+function generateProjectionMatrix(horizontalFOV, aspectRatio, nearClip, farClip) {
+  // vfov = 2 * tan-1(h/w * tan(hfov / 2))
+  let verticalFOV = 2 * atan(Math.pow(aspectRatio, -1) * tan(horizontalFOV / 2));
+
+  let top = tan(horizontalFOV/2) * nearClip;
+  let bottom = -top;
+  let right = top * aspectRatio;
+  let left = bottom * aspectRatio;
+
+  return [
+    [(2 * nearClip) / (right - left), 0, (right + left) / (right - left), 0],
+    [0, (2 * nearClip) / (top - bottom), (top + bottom) / (top - bottom), 0],
+    [0, 0, -(farClip + nearClip) / (farClip - nearClip), -(2 * farClip * nearClip) / (farClip - nearClip)],
+    [0, 0, -1, 0]
+  ];
 }
