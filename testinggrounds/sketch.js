@@ -48,7 +48,7 @@ function setup() {
   charStroke(1);
   charFill(0.5);
   
-  // charTranslate(width/2, height/2);
+  charTranslate(width/2, height/2);
   // noLoop();
 }
 

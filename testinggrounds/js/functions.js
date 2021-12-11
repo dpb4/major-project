@@ -151,7 +151,7 @@ function charTranslate(x, y) {
  */
 function charPoint(x, y, char = currentStroke, mode = 'SCREEN') {
   if (mode === 'SCREEN') {
-    if (x >= 0 && x <= windowWidth && y >= 0 && y <= windowHeight) {
+    if (x + currentTranslation[0] >= 0 && x + currentTranslation[0] <= windowWidth && y + currentTranslation[0] >= 0 && y + currentTranslation[0] <= windowHeight) {
       let p = screen2Char(x + currentTranslation[0], y + currentTranslation[1]);
       outBlock[p[0]][p[1]] = char;
     }
