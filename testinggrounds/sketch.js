@@ -6,6 +6,11 @@
 // - describe what you did to take this project "above and beyond"
 let p1, p2, p3, p4;
 
+let c = [];
+let model;
+let view;
+let projection;
+
 function preload() {
   font = loadFont("./assets/CONSOLA.TTF");
 }
@@ -19,15 +24,32 @@ function setup() {
   charSetup(12);
   charBackground(0);
   gradientStyle(2);
-  p1 = random(width);
-  p2 = random(height);
-  p3 = random(width);
-  p4 = random(height);
+  let n = getCubeVertices(1);
+  n = n.map(x => x * 200 - 100);
+  for (let i = 0; i < 8; i++) {
+    c[i] = [n[i*3], n[i*3+1], n[i*3+2]];
+  }
+  console.log(c);
+
+
+  model = createTranslationMatrix(4, 200, 200, 200);
+  view = createIdentityMatrix(4);
+  projection = generateProjectionMatrix(PI/2, width/height, 1, 100);
+
+  logMatrix(model);
+  logMatrix(view);
+  logMatrix(projection);
+  
+  // p1 = random(width);
+  // p2 = random(height);
+  // p3 = random(width);
+  // p4 = random(height);
 
   charStroke(1);
   charFill(0.5);
   
-  charTranslate(width/2, height/2);
+  // charTranslate(width/2, height/2);
+  // noLoop();
 }
 
 
@@ -36,10 +58,34 @@ function draw() {
   // your code goes here!
   charBackground();
 
+  c = c.map(v => matrixVectorMult(model, setVecDimension(v, 4)));
+  console.log(c);
+  c = c.map(v => matrixVectorMult(view, setVecDimension(v, 4)));
+  console.log(c);
+  c = c.map(v => matrixVectorMult(projection, setVecDimension(v, 4)));
+  console.log(c);
+  // c.map(v => [(v[0] + 1) / 2 * width, (v[1] + 1) / 2 * height]);
+  // console.log(c);
+
+  for (let i = 0; i < 8; i++) {
+    // charPoint(c[i][0], c[i][1]);
+  }
+  charStroke(0.5);
+  charPoint(-100, -129);
+  charPoint(100, 129);
+  charPoint(mouseX, mouseY);
+
+  // charEllipse(0, 0, 50, 50);
+  // for (let i = 0; i < 12; i++) {
+  //   p1 = c[cubeEdges[i*2]];
+  //   p2 = c[cubeEdges[i*2 + 1]];
+
+  //   charLine(p1[0], p1[1], p2[0], p2[1]);
+  // }
   // charLineCircle(0, 0, dist(mouseX, mouseY, width/2, height/2));
   // charTriangle(mouseX, mouseY, p1, p2, p3, p4); 
   // charEllipse(0, 0, mouseX - width/2, mouseY - height/2);
-  charRect(0, 0, mouseX - width/2, mouseY - height/2);
+  // charRect(0, 0, mouseX - width/2, mouseY - height/2);
   // console.log(charLine(0, 0, mouseX, mouseY));
   printOut();
 

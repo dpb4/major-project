@@ -475,7 +475,7 @@ function setVecDimension(vec = [], d=4) {
     let vl = vec.length;
 
     for (let i = 0; i < d-vl; i++) {
-      vec.push(0);
+      vec.push(1);
     }
   }
   return vec;
@@ -495,7 +495,6 @@ function logMatrix(mat) {
       maxLength = max(mat[i][j].toFixed(1).length, maxLength);
     }
   }
-  console.log(maxLength);
   let out = '';
   
   for (let i = 0; i < mat.length; i++) {
@@ -523,6 +522,7 @@ function generateProjectionMatrix(horizontalFOV, aspectRatio, nearClip, farClip)
   let right = top * aspectRatio;
   let left = bottom * aspectRatio;
 
+  console.log(top, bottom, left, right);
   return [
     [(2 * nearClip) / (right - left), 0, (right + left) / (right - left), 0],
     [0, (2 * nearClip) / (top - bottom), (top + bottom) / (top - bottom), 0],
