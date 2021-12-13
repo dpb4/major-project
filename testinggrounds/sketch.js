@@ -32,7 +32,7 @@ function setup() {
   console.log(c);
 
 
-  model = createTranslationMatrix(4, 0, 0, -1);
+  model = createTranslationMatrix(4, 0, 0, -10);
   view = createIdentityMatrix(4);
   projection = generateProjectionMatrix(PI/2, width/height, 1, 100);
 
@@ -48,7 +48,7 @@ function setup() {
   charStroke(1);
   charFill(0.5);
   
-  charTranslate(width/2, height/2);
+  // charTranslate(width/2, height/2);
   noLoop();
 }
 
@@ -67,12 +67,18 @@ function draw() {
   // c.map(v => [(v[0] + 1) / 2 * width, (v[1] + 1) / 2 * height]);
   // console.log(c);
 
+  // for (let i = 0; i < 8; i++) {
+  //   c[i] = [(c[i][0] + 1) / 2 * width, (1 - (c[i][1] + 1) / 2) * height];
+  // }
+  // console.log(c);
+
   for (let i = 0; i < 8; i++) {
-    // charPoint((c[i][0]) / 2 * width, (c[i][1]) / 2 * height);
+    charPoint((c[i][0] + 1) / 2 * width, (1 - (c[i][1] + 1) / 2) * height);
+    // charPoint(c[i][0], c[i][1]);
   }
-  charStroke(0.5);
-  charPoint(-129, -100);
-  charPoint(129, 100);
+  // charStroke(0.5);
+  // charPoint(-129, -100);
+  // charPoint(129, 100);
   // charPoint(mouseX, mouseY);
 
   // charEllipse(0, 0, 50, 50);
