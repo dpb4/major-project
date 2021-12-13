@@ -25,14 +25,14 @@ function setup() {
   charBackground(0);
   gradientStyle(2);
   let n = getCubeVertices(1);
-  n = n.map(x => x * 200 - 100);
+  // n = n.map(x => x * 200 - 100);
   for (let i = 0; i < 8; i++) {
     c[i] = [n[i*3], n[i*3+1], n[i*3+2]];
   }
   console.log(c);
 
 
-  model = createTranslationMatrix(4, 200, 200, 200);
+  model = createTranslationMatrix(4, 0, 0, -1);
   view = createIdentityMatrix(4);
   projection = generateProjectionMatrix(PI/2, width/height, 1, 100);
 
@@ -49,7 +49,7 @@ function setup() {
   charFill(0.5);
   
   charTranslate(width/2, height/2);
-  // noLoop();
+  noLoop();
 }
 
 
@@ -68,12 +68,12 @@ function draw() {
   // console.log(c);
 
   for (let i = 0; i < 8; i++) {
-    // charPoint(c[i][0], c[i][1]);
+    // charPoint((c[i][0]) / 2 * width, (c[i][1]) / 2 * height);
   }
   charStroke(0.5);
-  charPoint(-100, -129);
-  charPoint(100, 129);
-  charPoint(mouseX, mouseY);
+  charPoint(-129, -100);
+  charPoint(129, 100);
+  // charPoint(mouseX, mouseY);
 
   // charEllipse(0, 0, 50, 50);
   // for (let i = 0; i < 12; i++) {
