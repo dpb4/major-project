@@ -5,6 +5,7 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 let p1, p2, p3, p4;
+let z;
 
 let c = [];
 let model;
@@ -32,9 +33,9 @@ function setup() {
   console.log(c);
 
 
-  model = createTranslationMatrix(4, 0, 0, -10);
+  model = createTranslationMatrix(4, -0.5, -0.5, -10);
   view = createIdentityMatrix(4);
-  projection = generateProjectionMatrix(PI/2, width/height, 1, 100);
+  projection = generateProjectionMatrix(90, width/height, 0.1, 100);
 
   logMatrix(model);
   logMatrix(view);
@@ -47,9 +48,9 @@ function setup() {
 
   charStroke(1);
   charFill(0.5);
-  
+  z = -10;
   // charTranslate(width/2, height/2);
-  noLoop();
+  // noLoop();
 }
 
 
@@ -57,13 +58,17 @@ function setup() {
 function draw() {
   // your code goes here!
   charBackground();
+  let nc;
+  nc = c.map(v => matrixVectorMult(model, setVecDimension(v, 4)));
+  // console.log(c);
+  nc = c.map(v => matrixVectorMult(view, setVecDimension(v, 4)));
+  // console.log(c);
+  nc = c.map(v => matrixVectorMult(projection, setVecDimension(v, 4)));
+  // console.log(c);
 
-  c = c.map(v => matrixVectorMult(model, setVecDimension(v, 4)));
-  console.log(c);
-  c = c.map(v => matrixVectorMult(view, setVecDimension(v, 4)));
-  console.log(c);
-  c = c.map(v => matrixVectorMult(projection, setVecDimension(v, 4)));
-  console.log(c);
+  // for (let i = 0; i < 8; i++) {
+  //   c[i] = matrixVectorMult(projection, setVecDimension(c[i], 4));
+  // }
   // c.map(v => [(v[0] + 1) / 2 * width, (v[1] + 1) / 2 * height]);
   // console.log(c);
 
@@ -73,9 +78,11 @@ function draw() {
   // console.log(c);
 
   for (let i = 0; i < 8; i++) {
-    charPoint((c[i][0] + 1) / 2 * width, (1 - (c[i][1] + 1) / 2) * height);
+    charPoint((nc[i][0] + 1) / 2 * width, (1 - (nc[i][1] + 1) / 2) * height);
     // charPoint(c[i][0], c[i][1]);
   }
+
+  model = createTranslationMatrix(4, -0.5, -0.5, -10);
   // charStroke(0.5);
   // charPoint(-129, -100);
   // charPoint(129, 100);
@@ -93,6 +100,7 @@ function draw() {
   // charEllipse(0, 0, mouseX - width/2, mouseY - height/2);
   // charRect(0, 0, mouseX - width/2, mouseY - height/2);
   // console.log(charLine(0, 0, mouseX, mouseY));
+  z--;
   printOut();
 
   

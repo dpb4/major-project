@@ -44,4 +44,5 @@ An extension to p5.js that uses ascii text to draw instead of pixels. I plan to 
 - Minesweeper
 - Snake (again)
 - Some kind of soft body physics
-- raycaster
+- Raycaster
+- Mandelbrot visualizer
