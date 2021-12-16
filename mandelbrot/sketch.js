@@ -57,10 +57,11 @@ function mousePressed() {
 function mouseReleased() {
   let dx = mouseX - startMouseX;
   if (dx > 0) {
-    viewWidth = mapRange(dx, 0, width, windowX, windowX + viewWidth) - windowX;
-    viewHeight = height/width * viewWidth;
+    let pWindowX = windowX;
     windowX = mapRange(startMouseX, 0, width, windowX, windowX + viewWidth);
     windowY = mapRange(startMouseY, 0, height, windowY, windowY + viewHeight);
+    viewWidth = mapRange(dx, 0, width, pWindowX, pWindowX + viewWidth) - pWindowX;
+    viewHeight = height/width * viewWidth;
     
     console.log(windowX, windowY, viewWidth, viewHeight, dx/width);
     buffer = getVals();
