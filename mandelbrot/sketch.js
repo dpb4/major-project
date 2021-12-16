@@ -5,13 +5,14 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
-// TODO add pattern detection, add more colours
+// TODO add pattern detection, depth changer
 
 let windowX, windowY;
 let viewWidth, viewHeight;
 let startMouseX, startMouseY;
+let up, down;
 
-let loaded = false;
+let buttoned = false;
 let buffer;
 
 let depth = 512;
@@ -43,6 +44,14 @@ function setup() {
   console.log(windowX, windowY, viewWidth, viewHeight);
 
   // noLoop();
+  let t = `depth_cutoff:${depth}`;
+
+  let endOfText = screen2Char(30, 30);
+
+  up = [endOfText[0] + t.length - depth.toString().length + 2, endOfText[1] - 1];
+  down = [endOfText[0] + t.length - depth.toString().length + 2, endOfText[1] + 1];
+
+  alert('This is a Mandelbrot fractal viewer. To move around, click and drag to select a rectangle. Your view will resize to fit the rectangle you selected. To change the maximum depth (increase detail), click on the up or down arrow in the top left. Space will reload your current view. You can go back 1 step by pressing right click. Enjoy!');
 }
 
 function draw() {
@@ -56,6 +65,18 @@ function draw() {
 
 function mousePressed() {
   if (mouseButton === LEFT) {
+    let ms = screen2Char(mouseX, mouseY);
+    let dl = depth.toString().length;
+
+    if (ms[0] === up[0] + dl && ms[1] === up[1]) {
+      buttoned = true;
+      depth *= 2;
+      return;
+    } else if (ms[0] === down[0] + dl && ms[1] === down[1]) {
+      buttoned = true;
+      depth *= 0.5;
+      return;
+    }
     startMouseX = mouseX;
     startMouseY = mouseY;
   } else if (mouseButton === RIGHT) {
@@ -70,7 +91,7 @@ function mousePressed() {
 
 function mouseReleased() {
   let dx = mouseX - startMouseX;
-  if (dx > 0 && mouseButton === LEFT) {
+  if (dx > 0 && mouseButton === LEFT && !buttoned) {
     cache();
 
     let pWindowX = windowX;
@@ -87,7 +108,7 @@ function mouseReleased() {
     buffer = getVals();
 
   }
-
+  buttoned = false;
 }
 
 function mapRange(x, in_min, in_max, out_min, out_max) {
@@ -150,12 +171,28 @@ function display() {
       }
     }
   }
+
+  let t = `Depth_cutoff:${depth}`;
+  putText(t, 30, 30);
+
+  let endOfText = screen2Char(30, 30);
+  endOfText[0] += t.length;
+
+  charPoint(endOfText[0] + 2, endOfText[1] - 1, '^', 'CHAR');
+  charPoint(endOfText[0] + 2, endOfText[1], '|', 'CHAR');
+  charPoint(endOfText[0] + 2, endOfText[1] + 1, 'v', 'CHAR');
 }
 
 function selection() {
-  if (mouseIsPressed && mouseButton === LEFT) {
+  if (mouseIsPressed && mouseButton === LEFT && !buttoned) {
     let dx = mouseX - startMouseX;
     
-    charLineRect(startMouseX, startMouseY, dx, floor(dx * height/width), '#');
+    charLineRect(startMouseX, startMouseY, dx, dx * height/width, '+');
+  }
+}
+
+function keyPressed() {
+  if (keyCode === 32) {
+    buffer = getVals();
   }
 }
