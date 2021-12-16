@@ -12,7 +12,7 @@ let startMouseX, startMouseY;
 let loaded = false;
 let buffer;
 
-let depth = 128;
+let depth = 512;
 function preload() {
   font = loadFont("./assets/CONSOLA.TTF");
 }
@@ -34,27 +34,17 @@ function setup() {
   viewHeight = height/width * viewWidth;
 
   buffer = getVals();
+  charStroke(1);
+  console.log(windowX, windowY, viewWidth, viewHeight);
 
   // noLoop();
 }
 
 function draw() {
-  charStroke(1);
-  putText('LOADING...', width/2, height/2);
-  printOut();
+  charBackground(0);
 
-
-  for (let x = 0; x < resX; x++) {
-    for (let y = 0; y < resY; y++) {
-      if (buffer[x][y] !== 0) {
-        charPoint(x, y, colourMapper(buffer[x][y]), 'CHAR');
-      }
-    }
-  }
-
-  if (mouseIsPressed) {
-    //you were here
-  }
+  display();
+  selection();
 
   printOut();
 }
@@ -62,6 +52,21 @@ function draw() {
 function mousePressed() {
   startMouseX = mouseX;
   startMouseY = mouseY;
+}
+
+function mouseReleased() {
+  let dx = mouseX - startMouseX;
+  if (dx > 0) {
+    viewWidth = mapRange(dx, 0, width, windowX, windowX + viewWidth) - windowX;
+    viewHeight = height/width * viewWidth;
+    windowX = mapRange(startMouseX, 0, width, windowX, windowX + viewWidth);
+    windowY = mapRange(startMouseY, 0, height, windowY, windowY + viewHeight);
+    
+    console.log(windowX, windowY, viewWidth, viewHeight, dx/width);
+    buffer = getVals();
+
+  }
+
 }
 
 function mapRange(x, in_min, in_max, out_min, out_max) {
@@ -97,4 +102,22 @@ function getVals() {
   }
   loaded = true;
   return buffer;
+}
+
+function display() {
+  for (let x = 0; x < resX; x++) {
+    for (let y = 0; y < resY; y++) {
+      if (buffer[x][y] !== 0) {
+        charPoint(x, y, colourMapper(buffer[x][y]), 'CHAR');
+      }
+    }
+  }
+}
+
+function selection() {
+  if (mouseIsPressed) {
+    let dx = mouseX - startMouseX;
+    
+    charLineRect(startMouseX, startMouseY, dx, floor(dx * height/width), '#');
+  }
 }
