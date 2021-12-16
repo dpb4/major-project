@@ -5,6 +5,8 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
+// TODO add pattern detection, add more colours
+
 let windowX, windowY;
 let viewWidth, viewHeight;
 let startMouseX, startMouseY;
@@ -64,6 +66,10 @@ function mouseReleased() {
     viewHeight = height/width * viewWidth;
     
     console.log(windowX, windowY, viewWidth, viewHeight, dx/width);
+
+    if (viewWidth < 1e-14) {
+      alert("You've reached the limit of 64-bit floating point precision! You should probably turn back.");
+    }
     buffer = getVals();
 
   }
