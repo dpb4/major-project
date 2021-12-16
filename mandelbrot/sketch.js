@@ -49,8 +49,8 @@ function setup() {
 
   let endOfText = screen2Char(30, 30);
 
-  up = [endOfText[0] + t.length - depth.toString().length + 2, endOfText[1] - 1];
-  down = [endOfText[0] + t.length - depth.toString().length + 2, endOfText[1] + 1];
+  up = [endOfText[0] + t.length - depth.toString().length + 6, endOfText[1] - 1];
+  down = [endOfText[0] + t.length - depth.toString().length + 6, endOfText[1] + 1];
 
 }
 
@@ -118,16 +118,19 @@ function mapRange(x, in_min, in_max, out_min, out_max) {
 
 function evalPoint(complex, depth) {
   let z = math.complex(0, 0);
+  let prevZs = new Map();
 
   for (let i = 0; i < depth; i++) {
     z = math.add(math.pow(z, 2), complex);
+
+    
     let distFromOrigin = math.sqrt(math.add(math.pow(z.re, 2), math.pow(z.im, 2)));
 
     if (distFromOrigin >= 2) {
       return i/depth;
     }
   }
-  return true;
+  return 1;
 }
 
 function getVals() {
@@ -172,7 +175,7 @@ function display() {
     }
   }
 
-  let t = `Depth_cutoff:${depth}`;
+  let t = `~~Depth_cutoff:${depth}~~`;
   putText(t, 30, 30);
 
   let endOfText = screen2Char(30, 30);
@@ -181,6 +184,8 @@ function display() {
   charPoint(endOfText[0] + 2, endOfText[1] - 1, '^', 'CHAR');
   charPoint(endOfText[0] + 2, endOfText[1], '|', 'CHAR');
   charPoint(endOfText[0] + 2, endOfText[1] + 1, 'v', 'CHAR');
+
+  putText(`~~Current_View_Width:${viewWidth}~~`, 30, height-30);
 }
 
 function selection() {
