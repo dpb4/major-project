@@ -75,6 +75,8 @@ function charSetup(res = 16) {
 
   document.getElementById('textCanvas').style.fontSize = `${textSize()}px`;
   document.getElementById('textCanvas').style.lineHeight = `${charHeight}px`;
+
+  document.addEventListener('contextmenu', event => event.preventDefault());
 }
 
 function gradientStyle(s) {

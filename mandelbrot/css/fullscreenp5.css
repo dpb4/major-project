@@ -2,7 +2,10 @@ body, html {
     padding: 0;
     margin: 0;
     height: 100%;
-    /* overflow: hidden; */
+
+    -webkit-user-select: none;
+    user-select: none;
+
     position:fixed;
     background-color: black;
 }
