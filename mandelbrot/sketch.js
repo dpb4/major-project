@@ -32,6 +32,7 @@ function setup() {
   gradientStyle(2);
 
   charBackground(0);
+  alert('This is a Mandelbrot fractal viewer. To move around, click and drag to select a rectangle. Your view will resize to fit the rectangle you selected. To change the maximum depth (increase/decrease accuracy of computations), click on the up or down arrow in the top left. Space will reload your current view. You can go back 1 step by pressing right click. Enjoy!');
 
   windowX = -2;
   viewWidth = 4;
@@ -51,7 +52,6 @@ function setup() {
   up = [endOfText[0] + t.length - depth.toString().length + 2, endOfText[1] - 1];
   down = [endOfText[0] + t.length - depth.toString().length + 2, endOfText[1] + 1];
 
-  alert('This is a Mandelbrot fractal viewer. To move around, click and drag to select a rectangle. Your view will resize to fit the rectangle you selected. To change the maximum depth (increase detail), click on the up or down arrow in the top left. Space will reload your current view. You can go back 1 step by pressing right click. Enjoy!');
 }
 
 function draw() {
