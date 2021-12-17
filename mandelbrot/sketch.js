@@ -15,7 +15,7 @@ let up, down;
 let buttoned = false;
 let buffer;
 
-let depth = 512;
+let depth = 128;
 
 let last;
 function preload() {
@@ -32,7 +32,7 @@ function setup() {
   gradientStyle(2);
 
   charBackground(0);
-  alert('This is a Mandelbrot fractal viewer. To move around, click and drag to select a rectangle. Your view will resize to fit the rectangle you selected. To change the maximum depth (increase/decrease accuracy of computations), click on the up or down arrow in the top left. Space will reload your current view. You can go back 1 step by pressing right click. Enjoy!');
+  alert('This is a Mandelbrot set viewer. To move around, click and drag to select a rectangle. Your view will resize to fit the rectangle you selected. To change the maximum depth (increase/decrease accuracy of computations), click on the up or down arrow in the top left. Space will reload your current view. You can go back 1 step by pressing right click. Enjoy!');
 
   windowX = -2;
   viewWidth = 4;
@@ -100,8 +100,6 @@ function mouseReleased() {
     viewWidth = mapRange(dx, 0, width, pWindowX, pWindowX + viewWidth) - pWindowX;
     viewHeight = height/width * viewWidth;
     
-    console.log(windowX, windowY, viewWidth, viewHeight, dx/width);
-
     if (viewWidth < 1e-14) {
       alert("You've reached the limit of 64-bit floating point precision! You should probably turn back.");
     }
