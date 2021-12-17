@@ -320,9 +320,13 @@ function charEllipse(x, y, w, h) {
   fillShape(points, currentFill);
 }
 
-function putText(text, x, y) {
+function putText(text, x, y, safetyOverride = false) {
   for (let i = 0; i < text.length; i++) {
-    if (!notAllowedCharacters.includes(text[i])) {
+    if (!safetyOverride) {
+      if (!notAllowedCharacters.includes(text[i])) {
+        charPoint(x + i*charWidth, y, text[i]);
+      }
+    } else {
       charPoint(x + i*charWidth, y, text[i]);
     }
   }

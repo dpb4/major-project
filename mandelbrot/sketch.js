@@ -172,8 +172,8 @@ function display() {
     }
   }
 
-  let t = `~~Depth_cutoff:${depth}~~`;
-  putText(t, 30, 30);
+  let t = ` ~Depth cutoff:${depth}~ `;
+  putText(t, 30, 30, true);
 
   let endOfText = screen2Char(30, 30);
   endOfText[0] += t.length;
@@ -182,7 +182,7 @@ function display() {
   charPoint(endOfText[0] + 2, endOfText[1], '|', 'CHAR');
   charPoint(endOfText[0] + 2, endOfText[1] + 1, 'v', 'CHAR');
 
-  putText(`~~Current_View_Width:${viewWidth}~~`, 30, height-30);
+  putText(` ~Current View Width:${viewWidth.toExponential()}~ `, 30, height-30, true);
 }
 
 function selection() {
