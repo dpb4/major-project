@@ -15,7 +15,7 @@ let up, down;
 let buttoned = false;
 let buffer;
 
-let depth = 512;
+let depth = 128;
 
 let last;
 function preload() {
@@ -100,7 +100,7 @@ function mouseReleased() {
     viewWidth = mapRange(dx, 0, width, pWindowX, pWindowX + viewWidth) - pWindowX;
     viewHeight = height/width * viewWidth;
     
-    console.log(windowX, windowY, viewWidth, viewHeight, dx/width);
+    // console.log(windowX, windowY, viewWidth, viewHeight, dx/width);
 
     if (viewWidth < 1e-14) {
       alert("You've reached the limit of 64-bit floating point precision! You should probably turn back.");
@@ -118,6 +118,7 @@ function mapRange(x, in_min, in_max, out_min, out_max) {
 
 function evalPoint(complex, depth) {
   let z = math.complex(0, 0);
+<<<<<<< Updated upstream
   let prevZs = new Map();
 
   for (let i = 0; i < depth; i++) {
@@ -125,8 +126,17 @@ function evalPoint(complex, depth) {
 
     
     let distFromOrigin = math.sqrt(math.add(math.pow(z.re, 2), math.pow(z.im, 2)));
+=======
+  let pastZs = new Map();
 
-    if (distFromOrigin >= 2) {
+  for (let i = 0; i < depth; i++) {
+    z = math.add(math.pow(z, 2), complex);
+>>>>>>> Stashed changes
+
+    // let distFromOriginSquared = math.add(math.pow(z.re, 2), math.pow(z.im, 2));
+    
+    if (abs(z.re) > 2 || abs(z.im) > 2) {
+      // console.log(pastZs);
       return i/depth;
     }
   }
@@ -134,6 +144,7 @@ function evalPoint(complex, depth) {
 }
 
 function getVals() {
+  let startTime = millis();
   let buffer = new Array(resX).fill(0).map(() => new Array(resY).fill(0));
   for (let x = 0; x < resX; x++) {
     for (let y = 0; y < resY; y++) {
@@ -147,6 +158,8 @@ function getVals() {
     }
   }
   loaded = true;
+
+  console.log((millis() - startTime) / 1000);
   return buffer;
 }
 
