@@ -7,12 +7,13 @@ class Point {
   }
 
   applyForce(f) {
-    f.sub(p5.Vector.mult(this.velocity, this.damping));
+    // f.sub(p5.Vector.mult(this.velocity, this.damping));
+
     this.acceleration.add(f);
 
-    this.velocity.add(this.acceleration);
+    this.velocity.add(p5.Vector.mult(this.acceleration, timestep));
 
-    this.pos.add(this.velocity);
+    this.pos.add(p5.Vector.mult(this.velocity, timestep));
   }
 
   display() {

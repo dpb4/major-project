@@ -7,6 +7,8 @@
 
 let p, q;
 let c;
+let gravity = 1;
+let timestep = 0.25;
 
 function preload() {
   font = loadFont("./assets/CONSOLA.TTF");
@@ -24,7 +26,7 @@ function setup() {
   p = new Point(width/2, height/2, 10);
   q = new Point(width/4, height/2, 10);
 
-  c = new Connection(p, q, 0.001, 0.1, width/4);
+  c = new Connection(p, q, 1, 0.1, width/4);
 }
 
 function draw() {
