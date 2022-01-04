@@ -21,10 +21,10 @@ function setup() {
   charSetup(12);
   gradientStyle(2);
 
-  p = new Point(width/2, height/2);
-  q = new Point(width/4, height/2);
+  p = new Point(width/2, height/2, 10);
+  q = new Point(width/4, height/2, 10);
 
-  c = new Connection(p, q, 0.0001, -0.1, width/4);
+  c = new Connection(p, q, 0.001, 0.1, width/4);
 }
 
 function draw() {

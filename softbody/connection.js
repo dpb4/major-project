@@ -19,15 +19,15 @@ class Connection {
 
     let direction = p5.Vector.sub(this.p1.pos, this.p2.pos).normalize();
 
-    // let stretchAmount = (currentDistance - this.restingLength) * this.k;
-    let stretchAmount = this.k;
+    let stretchAmount = (currentDistance - this.restingLength) * this.k;
+    // let stretchAmount = this.k;
 
     let force = direction.mult(-stretchAmount);
     // console.log(diff);
-    // this.p1.applyForce(force.sub(p5.Vector.mult(this.p1.velocity, this.damping)));
-    // this.p2.applyForce(force.sub(p5.Vector.mult(this.p2.velocity, this.damping)).mult(-1));
+    // this.p1.applyForce(force.sub(p5.Vector.mult(this.p1.acceleration, this.damping)));
+    // this.p2.applyForce(force.sub(p5.Vector.mult(this.p2.acceleration, this.damping)).mult(-1));
     this.p1.applyForce(force);
-    this.p2.applyForce(force.mult(-1));
+    // this.p2.applyForce(force.mult(-1));
     
   }
 }
