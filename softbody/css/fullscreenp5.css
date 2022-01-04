@@ -1,0 +1,41 @@
+body, html {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    /* overflow: hidden; */
+    position:fixed;
+    background-color: black;
+}
+::-webkit-scrollbar {
+    display: none;
+}
+ 
+#textCanvas {
+    position:absolute;
+    top: 0;
+    left: 0;
+
+    -webkit-user-select: none; /* Safari */        
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+
+    color: white;
+    font-family: consolas;
+    /* these will get changed by my javascript */
+    font-size: 16px;
+    line-height: 1;
+    /* white-space: pre; */
+}
+
+@font-face {
+    font-family: consolas;
+    src: url('../assets/CONSOLA.TTF');
+}
+
+canvas#defaultCanvas0 {
+    position:absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}

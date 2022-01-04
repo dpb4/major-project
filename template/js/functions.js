@@ -71,10 +71,12 @@ function charSetup(res = 16) {
   resX = floor(windowWidth/charWidth) + 1;
   resY = floor(windowHeight/charHeight) + 1;
 
-  outBlock = new Array(resX).fill(0).map(() => new Array(resY).fill('='));
+  outBlock = new Array(resX).fill(0).map(() => new Array(resY).fill('.'));
 
   document.getElementById('textCanvas').style.fontSize = `${textSize()}px`;
   document.getElementById('textCanvas').style.lineHeight = `${charHeight}px`;
+
+  document.addEventListener('contextmenu', event => event.preventDefault());
 }
 
 function gradientStyle(s) {
@@ -318,9 +320,13 @@ function charEllipse(x, y, w, h) {
   fillShape(points, currentFill);
 }
 
-function putText(text, x, y) {
+function putText(text, x, y, safetyOverride = false) {
   for (let i = 0; i < text.length; i++) {
-    if (!notAllowedCharacters.includes(text[i])) {
+    if (!safetyOverride) {
+      if (!notAllowedCharacters.includes(text[i])) {
+        charPoint(x + i*charWidth, y, text[i]);
+      }
+    } else {
       charPoint(x + i*charWidth, y, text[i]);
     }
   }
