@@ -7,7 +7,7 @@ class Spring {
     this.mass = mass;
     this.damping = damping;
 
-    // this.restingLength = this.anchor.dist(this.point);
+    this.restingLength = this.anchor.dist(this.point);
     this.restingPosition = this.point.copy();
     this.acceleration = createVector(0, 0);
     this.velocity = createVector(0, 0);
@@ -22,11 +22,15 @@ class Spring {
   }
 
   update() {
-    // let displacement = this.anchor.dist(this.point) - this.restingLength;
-    let displacement = p5.Vector.sub(this.point, this.restingPosition);
+    let displacement = this.anchor.dist(this.point) - this.restingLength;
+    let directionVector = p5.Vector.sub(this.point, this.anchor).normalize();
+
+    // console.log(displacement, degrees(atan2(directionVector.y, directionVector.x)));
+    directionVector.mult(displacement);
+    // let displacement = p5.Vector.sub(this.point, this.restingPosition);
 
     let dampingForce = p5.Vector.mult(this.velocity, this.damping);
-    let springForce = p5.Vector.mult(displacement, -this.springiness);
+    let springForce = p5.Vector.mult(directionVector, -this.springiness);
 
     // console.log(displacement, springForce);
 

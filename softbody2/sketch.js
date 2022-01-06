@@ -5,8 +5,8 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
-let gravity = 1;
-let timeScale = 0.4;
+let gravity = 0;
+let timeScale = 0.3;
 let s;
 
 function preload() {
@@ -22,7 +22,7 @@ function setup() {
   charSetup(12);
   gradientStyle(2);
 
-  s = new Spring(width/2, height/4, width/2, height/2, 0.5, 30, 1);
+  s = new Spring(width/2, height/4, width/4, height/2, 2, 20, 1);
 }
 
 function draw() {
