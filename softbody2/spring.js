@@ -8,7 +8,6 @@ class Spring {
     this.damping = damping;
 
     this.restingLength = this.anchor.dist(this.point);
-    this.restingPosition = this.point.copy();
     this.acceleration = createVector(0, 0);
     this.velocity = createVector(0, 0);
   }
@@ -36,7 +35,7 @@ class Spring {
 
     let totalForce = p5.Vector.add(springForce, p5.Vector.sub(createVector(0, this.mass * gravity), dampingForce));
 
-    this.acceleration = totalForce.div(this.mass);
+    this.acceleration = p5.Vector.div(totalForce, this.mass);
     this.velocity.add(this.acceleration.mult(timeScale));
     this.point.add(p5.Vector.mult(this.velocity, timeScale));
   }
