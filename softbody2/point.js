@@ -14,12 +14,25 @@ class Point {
   }
 
   applyForce(force) {
-    let before = this.pos.copy();
     this.acceleration = p5.Vector.div(force, this.mass);
     this.velocity.add(p5.Vector.mult(this.acceleration, timeScale));
     this.pos.add(p5.Vector.mult(this.velocity, timeScale));
 
+    this.checkCollision();
     // console.log("force applied", this.pos);
     // this.display();
+  }
+
+  checkCollision() {
+    if (this.pos.y >= height) {
+      console.log('floor');
+      this.pos.y = this.height-1;
+      if (this.velocity.y >= 0){
+        this.velocity.y = 0;
+      }
+      if (this.acceleration.y >= 0){
+        this.acceleration.y = 0;
+      }
+    }
   }
 }

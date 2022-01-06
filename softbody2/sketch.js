@@ -5,7 +5,7 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
-let gravity = 0;
+let gravity = 9.81;
 let timeScale = 0.3;
 let s;
 let tri;
@@ -88,7 +88,7 @@ class SoftBody {
     charFill(1);
 
     for (let i = 0; i < 4; i++) {
-      charTriangle(this.points[i].pos.x, this.points[i].pos.y, this.points[(i+1) % this.sides].pos.x, this.points[(i+1) % this.sides].pos.y, this.points[(i+2) % this.sides].pos.x, this.points[(i+2) % this.sides].pos.y)
+      charTriangle(this.points[i].pos.x, this.points[i].pos.y, this.points[(i+1) % this.sides].pos.x, this.points[(i+1) % this.sides].pos.y, this.points[(i+2) % this.sides].pos.x, this.points[(i+2) % this.sides].pos.y);
     }
   }
 
