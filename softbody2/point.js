@@ -5,6 +5,8 @@ class Point {
 
     this.acceleration = createVector(0, 0);
     this.velocity = createVector(0, 0);
+
+    this.lastPos = this.pos.copy();
   }
 
   display() {
@@ -14,6 +16,8 @@ class Point {
   }
 
   applyForce(force) {
+    this.lastPos = this.pos.copy();
+
     this.acceleration = p5.Vector.div(force, this.mass);
     this.velocity.add(p5.Vector.mult(this.acceleration, timeScale));
     this.pos.add(p5.Vector.mult(this.velocity, timeScale));
@@ -23,15 +27,44 @@ class Point {
     // this.display();
   }
 
+  dragged() {
+    this.velocity = p5.Vector.sub(this.pos, this.lastPos).mult(1);
+  }
+
   checkCollision() {
     if (this.pos.y >= height) {
-      console.log('floor');
-      this.pos.y = this.height-1;
+      this.pos.y = height-1;
+
       if (this.velocity.y >= 0){
         this.velocity.y = 0;
       }
+
       if (this.acceleration.y >= 0){
         this.acceleration.y = 0;
+      }
+    }
+
+    if (this.pos.x >= width) {
+      this.pos.x = width-1;
+
+      if (this.velocity.x >= 0){
+        this.velocity.x = 0;
+      }
+      
+      if (this.acceleration.x >= 0){
+        this.acceleration.x = 0;
+      }
+    }
+
+    if (this.pos.x <= 0) {
+      this.pos.x = 1;
+
+      if (this.velocity.x <= 0){
+        this.velocity.x = 0;
+      }
+      
+      if (this.acceleration.x <= 0){
+        this.acceleration.x = 0;
       }
     }
   }

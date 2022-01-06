@@ -5,7 +5,7 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
-let gravity = 9.81;
+let gravity = 3;
 let timeScale = 0.3;
 let s;
 let tri;
@@ -25,13 +25,13 @@ function setup() {
   charSetup(12);
   gradientStyle(2);
 
-  s = new Spring(width/2, height/4, width/4, height/2, 2, 20, 1);
+  s = new Spring(width/2, height/4, width/4, height/2, 10, 20, 1);
 
   p1 = new Point(width/2, height/4, 20);
   p2 = new Point(width/4, height/2, 20);
   c = new Connection(p1, p2, 3, 2);
 
-  tri = new SoftBody(4, 200, 3, 2);
+  tri = new SoftBody(4, 200, 6, 2);
 }
 
 function draw() {
@@ -44,6 +44,10 @@ function draw() {
   // console.log(tri.connections[0].p1.velocity);
 
   // s.update();
+  if (mouseIsPressed) {
+    tri.points[0].pos.x = mouseX;
+    tri.points[0].pos.y = mouseY;
+  }
 
   printOut();
 }
@@ -76,7 +80,7 @@ class SoftBody {
     }
 
     for (let i = 0; i < 2; i++) {
-      this.connections.push(new Connection(this.points[i], this.points[i+2], this.springiness * 1.5, this.damping));
+      this.connections.push(new Connection(this.points[i], this.points[i+2], this.springiness * 5, this.damping));
     }
 
     console.log(this.points);
@@ -98,9 +102,15 @@ class SoftBody {
     }
     for (let c of this.connections) {
       c.stressPoints();
-      // c.display()
+      // c.display();
       this.display();
       // console.log(this.points[0].velocity);
     }
+  }
+}
+
+function mouseReleased() {
+  for (let p of tri.points) {
+    p.dragged();
   }
 }
