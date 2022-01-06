@@ -14,8 +14,12 @@ class Point {
   }
 
   applyForce(force) {
+    let before = this.pos.copy();
     this.acceleration = p5.Vector.div(force, this.mass);
     this.velocity.add(p5.Vector.mult(this.acceleration, timeScale));
     this.pos.add(p5.Vector.mult(this.velocity, timeScale));
+
+    // console.log("force applied", this.pos);
+    // this.display();
   }
 }

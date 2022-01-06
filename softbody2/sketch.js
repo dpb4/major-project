@@ -31,7 +31,7 @@ function setup() {
   p2 = new Point(width/4, height/2, 20);
   c = new Connection(p1, p2, 3, 2);
 
-  tri = new SoftBody(3, 200, 3, 2);
+  tri = new SoftBody(4, 200, 3, 2);
 }
 
 function draw() {
@@ -41,6 +41,7 @@ function draw() {
   // c.display();
   // c.stressPoints();
   tri.update();
+  // console.log(tri.connections[0].p1.velocity);
 
   // s.update();
 
@@ -68,17 +69,38 @@ class SoftBody {
 
     for (let i = 0; i < this.sides; i++) {
       let ang = i/this.sides * TWO_PI;
-      this.points.push(new Point(this.radius * cos(ang) + width/2, this.radius * sin(ang) + height/2));
+      this.points.push(new Point(this.radius * cos(ang) + width/2, this.radius * sin(ang) + height/2, 20));
     }
     for (let i = 0; i < this.sides; i++) {
       this.connections.push(new Connection(this.points[i], this.points[(i+1) % this.sides], this.springiness, this.damping));
     }
+
+    for (let i = 0; i < 2; i++) {
+      this.connections.push(new Connection(this.points[i], this.points[i+2], this.springiness * 1.5, this.damping));
+    }
+
+    console.log(this.points);
+    console.log(this.connections);
+  }
+
+  display() {
+    charStroke(1);
+    charFill(1);
+
+    for (let i = 0; i < 4; i++) {
+      charTriangle(this.points[i].pos.x, this.points[i].pos.y, this.points[(i+1) % this.sides].pos.x, this.points[(i+1) % this.sides].pos.y, this.points[(i+2) % this.sides].pos.x, this.points[(i+2) % this.sides].pos.y)
+    }
   }
 
   update() {
+    for (let i = 0; i < this.sides; i++) {
+      // this.points[i].display();
+    }
     for (let c of this.connections) {
       c.stressPoints();
-      c.display();
+      // c.display()
+      this.display();
+      // console.log(this.points[0].velocity);
     }
   }
 }
