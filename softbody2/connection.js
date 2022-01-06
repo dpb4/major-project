@@ -6,7 +6,7 @@ class Connection {
     this.springiness = springiness;
     this.damping = damping;
 
-    this.restingLength = this.p1.pos.dist(this.p1.pos);
+    this.restingLength = this.p1.pos.dist(this.p2.pos);
   }
 
   stressPoints() {
@@ -18,7 +18,7 @@ class Connection {
 
     // total force = spring force + gravity - damping
     p2.applyForce(p5.Vector.add(springForce, p5.Vector.sub(createVector(0, this.p2.mass * gravity), p5.Vector.mult(this.p2.velocity, this.damping))));
-    p1.applyForce(p5.Vector.mult(p5.Vector.add(springForce, p5.Vector.sub(createVector(0, this.p1.mass * gravity), p5.Vector.mult(this.p1.velocity, this.damping))), -1));
+    p1.applyForce(p5.Vector.add(p5.Vector.mult(springForce, -1), p5.Vector.sub(createVector(0, this.p1.mass * gravity), p5.Vector.mult(this.p1.velocity, this.damping))));
   }
 
   display() {

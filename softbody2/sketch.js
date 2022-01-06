@@ -28,7 +28,7 @@ function setup() {
 
   p1 = new Point(width/2, height/4, 20);
   p2 = new Point(width/4, height/2, 20);
-  c = new Connection(p1, p2, 0.01, 1);
+  c = new Connection(p1, p2, 2, 1);
 }
 
 function draw() {
@@ -38,12 +38,14 @@ function draw() {
   c.display();
   c.stressPoints();
 
-  s.update();
+  // s.update();
 
   printOut();
 }
 
 function mousePressed() {
-  s.point.x = mouseX;
-  s.point.y = mouseY;
+  // s.point.x = mouseX;
+  // s.point.y = mouseY;
+  p2.pos.x = mouseX;
+  p2.pos.y = mouseY;
 }
