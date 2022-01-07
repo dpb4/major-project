@@ -28,7 +28,7 @@ class Point {
   }
 
   dragged() {
-    this.velocity = p5.Vector.sub(this.pos, this.lastPos).mult(1);
+    // this.velocity = p5.Vector.sub(this.pos, this.lastPos).mult(1);
   }
 
   checkCollision() {

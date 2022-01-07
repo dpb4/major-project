@@ -31,7 +31,27 @@ function setup() {
   p2 = new Point(width/4, height/2, 20);
   c = new Connection(p1, p2, 3, 2);
 
-  tri = new SoftBody(4, 200, 6, 2);
+  tri = new SoftBody(6, 200, 6, 2);
+
+  genDiagonals(6);
+}
+
+function genDiagonals(sides) {
+  for (let i = 0; i < sides-2; i++) {
+    let m = (i === 0) ? sides-1 : sides;
+
+    for (let j = i+2; j < m; j++) {
+      console.log(i, j);
+    }
+  }
+}
+
+function keyPressed() {
+  // let ang = random(PI/2, 3*PI/4);
+  let vec = createVector(random(-width/2, width/2), -height);
+  for (let p of tri.points) {
+    p.pos.add(vec);
+  }
 }
 
 function draw() {
@@ -73,26 +93,50 @@ class SoftBody {
 
     for (let i = 0; i < this.sides; i++) {
       let ang = i/this.sides * TWO_PI;
-      this.points.push(new Point(this.radius * cos(ang) + width/2, this.radius * sin(ang) + height/2, 20));
+      this.points.push(new Point(this.radius * cos(ang) + width/2, this.radius * sin(ang) + height/2, 80 / this.sides));
     }
     for (let i = 0; i < this.sides; i++) {
       this.connections.push(new Connection(this.points[i], this.points[(i+1) % this.sides], this.springiness, this.damping));
     }
 
-    for (let i = 0; i < 2; i++) {
-      this.connections.push(new Connection(this.points[i], this.points[i+2], this.springiness * 5, this.damping));
+    this.diags = this.genDiagonalIndices(this.sides);
+    for (let d of this.diags) {
+      this.connections.push(new Connection(this.points[d[0]], this.points[d[1]], this.springiness, this.damping));
+      this.connections[this.connections.length-1].restingLength *= 1.5;
     }
 
     console.log(this.points);
     console.log(this.connections);
   }
 
+  genDiagonalIndices(sides) {
+    let output = [];
+    for (let i = 0; i < sides-2; i++) {
+      let m = (i === 0) ? sides-1 : sides;
+  
+      for (let j = i+2; j < m; j++) {
+        output.push([i, j]);
+      }
+    }
+
+    return output;
+  }
+  
   display() {
     charStroke(1);
     charFill(1);
 
     for (let i = 0; i < 4; i++) {
       charTriangle(this.points[i].pos.x, this.points[i].pos.y, this.points[(i+1) % this.sides].pos.x, this.points[(i+1) % this.sides].pos.y, this.points[(i+2) % this.sides].pos.x, this.points[(i+2) % this.sides].pos.y);
+    }
+  }
+
+  wireFrame() {
+    for (let i = 0; i < this.sides; i++) {
+      charLine(this.points[i].pos.x, this.points[i].pos.y, this.points[(i+1) % this.sides].pos.x,this.points[(i+1) % this.sides].pos.y);
+    }
+    for (let d of this.diags) {
+      charLine(this.points[d[0]].pos.x, this.points[d[0]].pos.y, this.points[d[1]].pos.x, this.points[d[1]].pos.y);
     }
   }
 
@@ -103,9 +147,10 @@ class SoftBody {
     for (let c of this.connections) {
       c.stressPoints();
       // c.display();
-      this.display();
+      // this.display();
       // console.log(this.points[0].velocity);
     }
+    this.wireFrame();
   }
 }
 
