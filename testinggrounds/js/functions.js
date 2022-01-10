@@ -71,10 +71,12 @@ function charSetup(res = 16) {
   resX = floor(windowWidth/charWidth) + 1;
   resY = floor(windowHeight/charHeight) + 1;
 
-  outBlock = new Array(resX).fill(0).map(() => new Array(resY).fill('='));
+  outBlock = new Array(resX).fill(0).map(() => new Array(resY).fill('.'));
 
   document.getElementById('textCanvas').style.fontSize = `${textSize()}px`;
   document.getElementById('textCanvas').style.lineHeight = `${charHeight}px`;
+
+  document.addEventListener('contextmenu', event => event.preventDefault());
 }
 
 function gradientStyle(s) {
@@ -318,10 +320,21 @@ function charEllipse(x, y, w, h) {
   fillShape(points, currentFill);
 }
 
-function putText(text, x, y) {
+function putText(text, x, y, mode = "SCREEN", safetyOverride = false) {
+  let nx = x;
+  let ny = y;
+
+  if (mode === "SCREEN") {
+    nx = x/charWidth;
+    ny = y/charHeight;
+  }
   for (let i = 0; i < text.length; i++) {
-    if (!notAllowedCharacters.includes(text[i])) {
-      charPoint(x + i*charWidth, y, text[i]);
+    if (!safetyOverride) {
+      if (!notAllowedCharacters.includes(text[i])) {
+        charPoint(nx + i, ny, text[i], mode);
+      }
+    } else {
+      charPoint(nx + i, ny, text[i], mode);
     }
   }
 }
@@ -536,4 +549,44 @@ function generateProjectionMatrix(horizontalFOV, aspectRatio, nearClip, farClip)
     [0, 0, C, D],
     [0, 0, -1, 0]
   ];
+}
+
+function textLineSplitter(text, lineWidth) {
+  let lines = new Array(text.split(' ').length).fill('');
+
+  let currentWidth = 0;
+  let currentLine = 0;
+
+  for (let word of text.split(' ')) {
+    if (word.length + currentWidth < lineWidth) {
+
+      lines[currentLine] += word + ' ';
+      currentWidth += word.length + 1;
+    } else if (word.length + currentWidth === lineWidth) {
+
+      lines[currentLine] += word;
+      currentLine++;
+      currentWidth = 0;
+    } else {
+
+      lines[currentLine] = lines[currentLine].slice(0, -1);
+      currentLine++;
+      lines[currentLine] += word + ' ';
+      currentWidth = word.length + 1;
+    }
+  }
+
+  lines = lines.filter(l => l !== '');
+  return lines;
+}
+
+function charTextBox(text, x, y, width, background) {
+  let newWidth = floor(width / charWidth);
+  let lines = textLineSplitter(text, newWidth - 4);
+
+  console.log(lines);
+  charRect(x * charWidth, y * charHeight, width, (lines.length + 3) * charHeight);
+  for (let i = 0; i < lines.length; i++) {
+    putText(lines[i], x + 2, y + i + 2, "CHAR", true);
+  }
 }

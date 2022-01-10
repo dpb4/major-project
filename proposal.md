@@ -24,6 +24,7 @@ An extension to p5.js that uses ascii text to draw instead of pixels. I plan to 
 - [x] translate function
 - [ ] bezier curves
 - [ ] text box function
+- [ ] push/pop functions
 - [ ] support for 3d primitives, mainly cube
 - [ ] support for 3d models (this could be a stretch, but I do have a while to work on it), the timeline of which would look like:
     - [ ] basic wireframe
