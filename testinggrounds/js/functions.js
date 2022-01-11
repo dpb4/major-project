@@ -4,7 +4,7 @@ let outBlock = [];
 let font;
 let resX, resY;
 let charWidth, charHeight;
-// NOT ALLOWED CHARACTERS: ()[]{}<>- `?&
+
 let notAllowedCharacters = '()[]{}<>- `?&';
 let gradients = [
   '.:=+*#%@',

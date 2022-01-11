@@ -23,7 +23,7 @@ An extension to p5.js that uses ascii text to draw instead of pixels. I plan to 
 - [ ] rotate function
 - [x] translate function
 - [ ] bezier curves
-- [ ] text box function
+- [x] text box function
 - [ ] push/pop functions
 - [ ] vscode snippet extension
 - [ ] support for 3d primitives, mainly cube
