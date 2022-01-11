@@ -104,7 +104,7 @@ function draw() {
   // charEllipse(0, 0, mouseX - width/2, mouseY - height/2);
   // charRect(0, 0, mouseX - width/2, mouseY - height/2);
   // console.log(charLine(0, 0, mouseX, mouseY));
-  z--;
+  // z--;
   printOut();
 
   

@@ -12,7 +12,10 @@ let gradients = [
   '.\':!;LlIE9G8%',
 ];
 
+const CHAR = 'char';
+
 let currentTranslation = [0, 0];
+let coordinateMode = 'screen';
 
 const cubeVertices = [
   0, 0, 0,
@@ -114,9 +117,7 @@ function printOut() {
 
   for (let i = 0; i < resY; i++) {
     for (let j = 0; j < resX; j++) {
-      // console.log(outBlock[i][j]);
       out = out.concat(outBlock[j][i]);
-      // console.log(out);
     }
   }
 
@@ -134,6 +135,14 @@ function charBackground(f = 0) {
   }
 
   // outBlock = new Array(resX).fill(0).map(() => new Array(resY).fill(char));
+}
+
+function setCoordinateMode(mode) {
+  if (mode === SCREEN) {
+    coordinateMode = SCREEN;
+  } else if (mode === CHAR) {
+    coordinateMode = CHAR;
+  }
 }
 
 function screen2Char(x, y) {
@@ -177,7 +186,7 @@ function charLine(x1, y1, x2, y2, char = currentStroke) {
 
     return points;
   }
-  return null;
+  return [];
 }
 
 function charLineTriangle(x1, y1, x2, y2, x3, y3, char = currentStroke) {
@@ -392,7 +401,6 @@ function matrixDot() {
   //   }
   // }
 
-  // console.log(newM, minDim);
   // passed:
   for (let ny = 0; ny < minDim; ny++) {
     for (let nx = 0; nx < minDim; nx++) {
@@ -584,8 +592,15 @@ function charTextBox(text, x, y, width, background) {
   let newWidth = floor(width / charWidth);
   let lines = textLineSplitter(text, newWidth - 4);
 
-  console.log(lines);
-  charRect(x * charWidth, y * charHeight, width, (lines.length + 3) * charHeight);
+  if (background === undefined) {
+    charLineRect(x * charWidth, y * charHeight, width, (lines.length + 3) * charHeight);
+  } else {
+    let pf = currentFill;
+    charFill(background);
+    charRect(x * charWidth, y * charHeight, width, (lines.length + 3) * charHeight);
+    charFill(pf);
+  }
+    
   for (let i = 0; i < lines.length; i++) {
     putText(lines[i], x + 2, y + i + 2, "CHAR", true);
   }
