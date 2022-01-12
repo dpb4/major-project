@@ -6,7 +6,7 @@ Ascii Renderer for p5 (AR:p5) is a library for use with p5 that uses familiar p5
 
 # Glossary
 - [Getting Started](docs/getting-started.md)
-- [Global Variables/Constants](docs/global-variables/constants)
+- [Global Variables](docs/global-variables)
 - [Style functions](docs/drawing-functions)
 - [Shape functions](docs/shape-functions)
 - [Coordinate functions](docs/coordinate-functions)
