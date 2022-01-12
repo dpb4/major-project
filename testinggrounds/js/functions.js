@@ -17,6 +17,10 @@ const CHAR = 'char';
 let currentTranslation = [0, 0];
 let coordinateMode = 'screen';
 
+let currentGradient = gradients[0];
+let currentFill = currentGradient[currentGradient.length-1];
+let currentStroke = currentGradient[currentGradient.length-1];
+
 const cubeVertices = [
   0, 0, 0,
   0, 0, 1,
@@ -42,11 +46,6 @@ const cubeEdges = [
   5, 7,
   6, 7
 ];
-
-let currentGradient = gradients[0];
-
-let currentFill = currentGradient[currentGradient.length-1];
-let currentStroke = currentGradient[currentGradient.length-1];
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
