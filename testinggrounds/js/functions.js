@@ -1,4 +1,5 @@
 // TODO: change html text element to be instantiated from here (createP())
+// get rid of Ys
 
 let outBlock = [];
 let font;
@@ -47,21 +48,17 @@ const cubeEdges = [
   6, 7
 ];
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-function insert(str, index, value) {
+function insert(str, index, value) { // y
   return str.substr(0, index) + value + str.substr(index);
 }
 
-function randChar() {
+function randChar() { // y
   let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.`:,;_^"!~=|$&*@%#';
   
   return characters[round(random(characters.length))];
 }
 
-function charSetup(res = 16) {
+function charSetup(res = 16) { // y
   textAlign(LEFT, TOP);
   textFont(font);
   textSize(res);
@@ -93,7 +90,7 @@ function colourMapper(f) {
   return currentGradient[currentGradient.length-1];
 }
 
-function charFill(f) {
+function charFill(f) { // y
   if (typeof f === 'number') {
     currentFill = colourMapper(f);
   } else if (typeof f === 'string' && f.length === 1) {
@@ -101,7 +98,7 @@ function charFill(f) {
   }
 }
 
-function charStroke(f) {
+function charStroke(f) { // y
   if (typeof f === 'number') {
     currentStroke = colourMapper(f);
   } else if (typeof f === 'string' && f.length === 1) {
@@ -111,7 +108,7 @@ function charStroke(f) {
   return currentStroke;
 }
 
-function printOut() {
+function printOut() { // y
   out = '';
 
   for (let i = 0; i < resY; i++) {
