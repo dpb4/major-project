@@ -1,0 +1,16 @@
+# 3D functions
+
+- [`matrixVectorMult()`](functions/matrtixVectorMult)
+- [`getColumn()`](functions/getColumn)
+- [`vectorDot()`](functions/vectorDot)
+- [`matrixDot()`](functions/matrixDot)
+- [`createRotationMatrix()`](functions/createRotationMatrix)
+- [`mat4()`](functions/mat4)
+- [`mat3()`](functions/mat4)
+- [`createIdentityMatrix()`](functions/createIdentityMatrix)
+- [`createTranslationMatrix()`](functions/createTranslationMatrix)
+- [`createScaleMatrix()`](functions/createScaleMatrix)
+- [`setVecDimension()`](functions/setVecDimension)
+- [`getCubeVertices()`](functions/getCubeVertices)
+- [`logMatrix()`](functions/logMatrix)
+- [`generateProjectionMatrix()`](functions/generateProjectionMatrix)
