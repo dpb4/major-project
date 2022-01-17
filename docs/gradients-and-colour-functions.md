@@ -9,7 +9,9 @@
 - [`gradientStyle()`](functions/gradientStyle)
 - [`gradientTest()`](functions/gradientTest)
 - [`colourMapper()`](functions/colourMapper)
+
 ----
+
 ## Tips for making your own gradients
 The gradient of your sketch can completely change how it looks. Picking the right one is integral to making your sketch look nice.
 - Using fewer characters in a gradient can make the colours more distinct but there will be lower fidelity.
