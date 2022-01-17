@@ -48,11 +48,77 @@ const cubeEdges = [
   6, 7
 ];
 
+/**
+ * `charFill()` changes the inside colour of any shapes drawn. Analagous to `fill()` in p5. If `col` is a float between 0 and 1, it will use [`gradientMapper()`](gradientMapper) to determine the corresponding character. Otherwise if `col` is a character, it will fill shapes with that character directly. Beware `notAllowedCharacters` if using direct characters.
+ * @param {number | string} col Number between 0 and 1 *or* character
+ */
+function charFill(col) { // y
+  if (typeof col === 'number') {
+    currentFill = colourMapper(col);
+  } else if (typeof col === 'string' && col.length === 1) {
+    currentFill = col;
+  }
+}
+
+/**
+ * `charStroke()` changes the outline colour of any shapes drawn. Analagous to `stroke()` in p5. If `col` is a float between 0 and 1, it will use [`gradientMapper()`](gradientMapper) to determine the corresponding character. Otherwise if `col` is a character, it will outline shapes with that character directly. Beware `notAllowedCharacters` if using direct characters.
+ * @param {number | string} col Number between 0 and 1 *or* character
+ */
+function charStroke(col) { // y
+  if (typeof col === 'number') {
+    currentStroke = colourMapper(col);
+  } else if (typeof col === 'string' && col.length === 1) {
+    currentStroke = col;
+  }
+}
+/**
+ * `charBackground()` changes the background colour of the sketch. Analagous to `background()` in p5. If `f` is a float between 0 and 1, it will use [`gradientMapper()`](gradientMapper) to determine the corresponding character. Otherwise if `f` is a character, it will set the background to that character directly. Beware `notAllowedCharacters` if using direct characters.
+ * @param {number | string} col Number between 0 and 1 *or* character
+ */
+function charBackground(col = 0) {
+  if (typeof col === 'number') {
+    outBlock = new Array(resX).fill(0).map(() => new Array(resY).fill(colourMapper(col)));
+  } else if (typeof col === 'string' && col.length === 1) {
+    outBlock = new Array(resX).fill(0).map(() => new Array(resY).fill(col));
+  }
+}
+
+/**
+ * `gradientStyle()` changes the look of the sketch by selecting a different gradient from the gradients array.
+ * @param {number} index Index of desired gradient in the `gradients` array
+ */
+function gradientStyle(index) {
+  currentGradient = gradients[max(0, min(index, gradients.length-1))];
+}
+
+/**
+ * `gradientTest()` is a function to help visualize a gradient. It will draw a series of vertical lines all across the screen, and each line will be coloured according to the current gradient. This allows you to see exactly how your gradient looks all lined up as well as compare adjacent colours.
+ */
+function gradientTest() {
+  for (let i = 0; i < width; i += charWidth) {
+    charStroke(i/width);
+    charLine(i, 0, i, height);
+  }
+}
+
+/**
+ * `colourMapper()` takes in a float between 0 and 1 value and returns the corresponding character from `currentGradient`. 0 is the darkest, 1 is the lightest.
+ * @param {number} f Number between 0 and 1.
+ * @returns Character from `currentGradient`.
+ */
+function colourMapper(f) {
+  f = max(0, min(f, 1));
+  if (f !== 1) {
+    return currentGradient[floor(f * currentGradient.length)];
+  }
+  return currentGradient[currentGradient.length-1];
+}
+
 function insert(str, index, value) { // y
   return str.substr(0, index) + value + str.substr(index);
 }
 
-function randChar() { // y
+function randChar() {
   let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.`:,;_^"!~=|$&*@%#';
   
   return characters[round(random(characters.length))];
@@ -78,35 +144,8 @@ function charSetup(res = 16) { // y
   document.addEventListener('contextmenu', event => event.preventDefault());
 }
 
-function gradientStyle(s) {
-  currentGradient = gradients[max(0, min(s, gradients.length-1))];
-}
 
-function colourMapper(f) {
-  f = max(0, min(f, 1));
-  if (f !== 1) {
-    return currentGradient[floor(f * currentGradient.length)];
-  }
-  return currentGradient[currentGradient.length-1];
-}
 
-function charFill(f) { // y
-  if (typeof f === 'number') {
-    currentFill = colourMapper(f);
-  } else if (typeof f === 'string' && f.length === 1) {
-    currentFill = f;
-  }
-}
-
-function charStroke(f) { // y
-  if (typeof f === 'number') {
-    currentStroke = colourMapper(f);
-  } else if (typeof f === 'string' && f.length === 1) {
-    currentStroke = f;
-  }
-
-  return currentStroke;
-}
 
 function printOut() { // y
   out = '';
@@ -123,15 +162,6 @@ function printOut() { // y
   document.getElementById('textCanvas').innerHTML = out;
 }
 
-function charBackground(f = 0) {
-  if (typeof f === 'number') {
-    outBlock = new Array(resX).fill(0).map(() => new Array(resY).fill(colourMapper(f)));
-  } else if (typeof f === 'string' && f.length === 1) {
-    outBlock = new Array(resX).fill(0).map(() => new Array(resY).fill(f));
-  }
-
-  // outBlock = new Array(resX).fill(0).map(() => new Array(resY).fill(char));
-}
 
 function setCoordinateMode(mode) {
   if (mode === SCREEN) {
@@ -304,12 +334,6 @@ function fillShape(points, char) {
   }
 }
 
-function gradientTest() {
-  for (let i = 0; i < width; i += charWidth) {
-    charStroke(i/width);
-    charLine(i, 0, i, height);
-  }
-}
 
 function charCircle(x, y, radius) {
   let points = charLineCircle(x, y, radius, currentStroke);
