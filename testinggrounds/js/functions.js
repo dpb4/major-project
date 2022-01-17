@@ -114,6 +114,81 @@ function colourMapper(f) {
   return currentGradient[currentGradient.length-1];
 }
 
+/**
+ * Places a point at a given location on the text canvas.
+ * @param {number} x - the x coordinate of the point
+ * @param {number} y - the y coordinate of the point
+ * @param {string} [char] - optional - the character to use as the point. Set to `currentStroke` by default.
+ * @param {string} [mode] - optional - either `SCREEN` or `CHAR`. Controls which coordinate mode to use.
+ */
+function charPoint(x, y, char = currentStroke, mode = 'SCREEN') {
+  if (mode === 'SCREEN') {
+    if (x + currentTranslation[0] >= 0 && x + currentTranslation[0] <= windowWidth && y + currentTranslation[0] >= 0 && y + currentTranslation[0] <= windowHeight) {
+      let p = screen2Char(x + currentTranslation[0], y + currentTranslation[1]);
+      outBlock[p[0]][p[1]] = char;
+    }
+  } else if (mode === 'CHAR') {
+    if (x >= 0 && x < resX && y >= 0 && y < resY) { 
+      outBlock[floor(x)][floor(y)] = char;
+    }
+  }
+}
+
+/**
+ * `charLine()` draws a line between two given points. By default uses `currentStroke` as the character but it can be set directly with `char`.
+ * @param {number} x1 X coordinate of first point
+ * @param {number} y1 Y coordinate of first point
+ * @param {number} x2 X coordinate of second point
+ * @param {number} y2 Y coordinate of second point
+ * @param {string} [char] optional - Character to use for the line. By default set to `currentStroke`.
+ * @returns {array} A list of all the coordinates of the points that the line drew (in character coordinates).
+ */
+function charLine(x1, y1, x2, y2, char = currentStroke) {
+  let d = max(abs(x2-x1)/charWidth, abs(y2-y1)/charHeight);
+  if (d !== 0) {
+    let roundingOff = 0.0001;
+    let points = [];
+    
+    for (let i = 0; i < floor(d) + 1; i++) {
+      points.push(screen2Char(lerp(x1 + roundingOff + currentTranslation[0], x2 + roundingOff + currentTranslation[0], i/d), lerp(y1 + roundingOff + currentTranslation[1], y2 + roundingOff + currentTranslation[1], i/d)));
+      charPoint(points[i][0], points[i][1], char, 'CHAR');
+    }
+    
+    return points;
+  }
+  return [];
+}
+
+/**
+ * `charLineTriangle()` draws ***only the outline*** of a triangle on the sketch. It is essentially the same as `charTriangle()`, but it only draws the outline and cannot be filled. If you only want to draw the outline of a shape, this is more efficient than its filled counterpart.
+ * @param {number} x1 X coordinate of first point
+ * @param {number} y1 Y coordinate of first point
+ * @param {number} x2 X coordinate of second point
+ * @param {number} y2 Y coordinate of second point
+ * @param {number} x3 X coordinate of third point
+ * @param {number} y3 Y coordinate of third point
+ * @param {string} [char] optional - Character to use for the lines. By default set to `currentStroke`.
+ */
+function charLineTriangle(x1, y1, x2, y2, x3, y3, char = currentStroke) {
+  charLine(x1, y1, x2, y2, char);
+  charLine(x2, y2, x3, y3, char);
+  charLine(x3, y3, x1, y1, char);
+}
+
+/**
+ * `charLineRect()` draws ***only the outline*** of a rectangle on the sketch. It is essentially the same as [`charRect()`](charRect.md), but it only draws the outline and cannot be filled. If you only want to draw the outline of a shape, this is more efficient than its filled counterpart. 
+ * @param {number} x X coordinate of top left point
+ * @param {number} y Y coordinate of top left point
+ * @param {number} w Width of the rectangle
+ * @param {number} h Height of the rectangle
+ * @param {string} [char] optional - Character to use for the lines. By default set to `currentStroke`.
+ */
+function charLineRect(x, y, w, h, char = currentStroke) {
+  charLine(x    , y    , x + w, y    , char);
+  charLine(x    , y    , x    , y + h, char);
+  charLine(x + w, y    , x + w, y + h, char);
+  charLine(x    , y + h, x + w, y + h, char);
+}
 function insert(str, index, value) { // y
   return str.substr(0, index) + value + str.substr(index);
 }
@@ -179,54 +254,9 @@ function charTranslate(x, y) {
   currentTranslation = [x, y];
 }
 
-/**
- * Places a point at a given location on the text canvas.
- * @param {number} x - the x coordinate of the point
- * @param {number} y - the y coordinate of the point
- * @param {string} [char] - optional - the specific character to put on the point. if not included, it will use currentStroke
- * @param {string} [mode] - optional - either "SCREEN" or "CHAR". "SCREEN" (default) uses the x and y as pixel coordinates. "CHAR" uses them as character coordinates
- */
-function charPoint(x, y, char = currentStroke, mode = 'SCREEN') {
-  if (mode === 'SCREEN') {
-    if (x + currentTranslation[0] >= 0 && x + currentTranslation[0] <= windowWidth && y + currentTranslation[0] >= 0 && y + currentTranslation[0] <= windowHeight) {
-      let p = screen2Char(x + currentTranslation[0], y + currentTranslation[1]);
-      outBlock[p[0]][p[1]] = char;
-    }
-  } else if (mode === 'CHAR') {
-    if (x >= 0 && x < resX && y >= 0 && y < resY) { 
-      outBlock[floor(x)][floor(y)] = char;
-    }
-  }
-}
 
-function charLine(x1, y1, x2, y2, char = currentStroke) {
-  let d = max(abs(x2-x1)/charWidth, abs(y2-y1)/charHeight);
-  if (d !== 0) {
-    let roundingOff = 0.0001;
-    let points = [];
 
-    for (let i = 0; i < floor(d) + 1; i++) {
-      points.push(screen2Char(lerp(x1 + roundingOff + currentTranslation[0], x2 + roundingOff + currentTranslation[0], i/d), lerp(y1 + roundingOff + currentTranslation[1], y2 + roundingOff + currentTranslation[1], i/d)));
-      charPoint(points[i][0], points[i][1], char, 'CHAR');
-    }
 
-    return points;
-  }
-  return [];
-}
-
-function charLineTriangle(x1, y1, x2, y2, x3, y3, char = currentStroke) {
-  charLine(x1, y1, x2, y2, char);
-  charLine(x2, y2, x3, y3, char);
-  charLine(x3, y3, x1, y1, char);
-}
-
-function charLineRect(x, y, w, h, char = currentStroke) {
-  charLine(x    , y    , x + w, y    , char);
-  charLine(x    , y    , x    , y + h, char);
-  charLine(x + w, y    , x + w, y + h, char);
-  charLine(x    , y + h, x + w, y + h, char);
-}
 
 function charLineCircle(x, y, radius, char = currentStroke) {
   let verts = floor(radius/10 + 4); // subject to change
