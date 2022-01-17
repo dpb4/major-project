@@ -1,6 +1,8 @@
 # major-project
 CS30 Major Project
 
+# [Documentation](documentation)
+
 # Current Sub-Projects
 - [Ascii Camera](texttest)
 - [Mouse Chaser](chaser)
