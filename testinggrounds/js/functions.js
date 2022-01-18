@@ -213,30 +213,115 @@ function charLineCircle(x, y, radius, char = currentStroke) {
 } 
 
 /**
- * `charLineEllipse()` draws ***only the outline*** of an ellipse on the sketch. It is essentially the same as [`charEllipse()`](charRect.md), but it only draws the outline and cannot be filled. If you only want to draw the outline of a shape, this is more efficient than its filled counterpart. Note: both the width and the height **must** be positive and both are affected by [`coordinateMode()`](coordinateMode).
- * @param {number} x 
- * @param {number} y 
- * @param {number} w 
- * @param {number} h 
- * @param {*} char 
+ * `charLineEllipse()` draws ***only the outline*** of an ellipse on the sketch. It is essentially the same as [`charEllipse()`](charRect.md), but it only draws the outline and cannot be filled. If you only want to draw the outline of a shape, this is more efficient than its filled counterpart. Note: both the width and the height **must** be positive and both are affected by [`setCoordinateMode()`](setCoordinateMode).
+ * @param {number} x X coordinate of the centre point
+ * @param {number} y Y coordinate of the centre point
+ * @param {number} w Width of the ellipse
+ * @param {number} h Height of the ellipse
+ * @param {string} [char] optional - Character to use for the lines. By default set to `currentStroke`.
  * @returns 
  */
 function charLineEllipse(x, y, w, h, char = currentStroke) {
   w = abs(w);
   h = abs(h);
-
+  
   let verts = floor(max(w, h)/10 + 4); // subject to change
   let angStep = 1 / verts * TWO_PI;
   let points = [];
-
+  
   for (let i = 0; i < verts; i++) {
     let angle = i * angStep;
-
+    
     points.push(charLine(x + w*cos(angle), y + h*sin(angle), x + w*cos(angle - angStep), y + h*sin(angle - angStep), char));
     lastAngle = angle;
   }
-
+  
   return points;
+}
+
+/**
+ * `charTriangle()` draws a triangle on the sketch. Analagous to `triangle()` in p5.
+ * @param {number} x1 X coordinate of first point
+ * @param {number} y1 Y coordinate of first point
+ * @param {number} x2 X coordinate of second point
+ * @param {number} y2 Y coordinate of second point
+ * @param {number} x3 X coordinate of third point
+ * @param {number} y3 Y coordinate of third point
+ */
+function charTriangle(x1, y1, x2, y2, x3, y3) {
+  let points = [[x1, y1], [x2, y2], [x3, y3]];
+  // sort the points by descending y value
+  points.sort((a, b) => b[1]-a[1]);
+  
+  let lines = [
+    charLine(points[2][0], points[2][1], points[0][0], points[0][1]), 
+    charLine(points[2][0], points[2][1], points[1][0], points[1][1]), 
+    charLine(points[1][0], points[1][1], points[0][0], points[0][1])
+  ];
+
+  fillShape(sortByY(lines.flat()), currentFill);
+}
+
+/**
+ * `charRect()` draws a rectangle on the sketch. Analagous to `rect()`in p5. Note: both the width and the height **must** be positive and both are affected by [`setCoordinateMode()`](setCoordinateMode).
+ * @param {number} x X coordinate of top left point
+ * @param {number} y Y coordinate of top left point
+ * @param {number} w Width of the rectangle
+ * @param {number} h Height of the rectangle
+ */
+function charRect(x, y, w, h) {
+  // if (w < 0) {
+  //   console.log(w/charWidth, x/charWidth + w/charWidth);
+  //   w = -w;
+  //   x -= w;
+  //   console.log(w/charWidth, x/charWidth + w/charWidth);
+  // }
+  // if (h < 0) {
+  //   h = -h;
+  //   y -= h;
+  // }
+
+  // TODO maybe dont do this, dont want to reassign variables
+  [x, y] = screen2Char(x + currentTranslation[0], y + currentTranslation[1]);
+  [w, h] = screen2Char(w, h);
+
+  for (let curY = y; curY <= y + h; curY++) {
+    for (let curX = x; curX <= x + w; curX++) {
+      if (curY === y || curY === y + h || curX === x || curX === x + w) {
+        charPoint(curX, curY, currentStroke, "CHAR");
+      } else {
+        charPoint(curX, curY, currentFill, "CHAR");
+      }
+
+    }
+  }
+}
+
+/**
+ * `charCircle()` draws a circle on the sketch centered at `x`, `y`. Analgous to `circle()` in p5. Note: the radius **is** affected by [`setCoordinateMode()`](setCoordinateMode) and it is expressed **horizontally**. That is, that if `coordinateMode` is set to `CHAR`, `r` will refer to the number of characters going horizontally as the radius.
+ * @param {number} x X coordinate of the centre point
+ * @param {number} y Y coordinate of the centre point
+ * @param {number} radius Radius of the circle
+ */
+function charCircle(x, y, radius) {
+  let points = charLineCircle(x, y, radius, currentStroke);
+
+  points = sortByY(points.flat());
+  fillShape(points, currentFill);
+}
+
+/**
+ * `charEllipse()` draws an ellipse on the sketch. Analagous to `ellipse()`in p5. Note: both the width and the height are affected by [`setCoordinateMode()`](setCoordinateMode).
+ * @param {number} x X coordinate of the centre point
+ * @param {number} y Y coordinate of the centre point
+ * @param {number} w Width of the ellipse
+ * @param {number} h Height of the ellipse
+ */
+function charEllipse(x, y, w, h) {
+  let points = charLineEllipse(x, y, w, h, currentStroke);
+
+  points = sortByY(points.flat());
+  fillShape(points, currentFill);
 }
 
 function insert(str, index, value) { // y
@@ -304,12 +389,6 @@ function charTranslate(x, y) {
   currentTranslation = [x, y];
 }
 
-
-
-
-
-
-
 function sortByY(points) {
   let yMap = new Map();
 
@@ -324,47 +403,6 @@ function sortByY(points) {
   return yMap;
 }
 
-function charTriangle(x1, y1, x2, y2, x3, y3) {
-  let points = [[x1, y1], [x2, y2], [x3, y3]];
-  // sort the points by descending y value
-  points.sort((a, b) => b[1]-a[1]);
-  
-  let lines = [
-    charLine(points[2][0], points[2][1], points[0][0], points[0][1]), 
-    charLine(points[2][0], points[2][1], points[1][0], points[1][1]), 
-    charLine(points[1][0], points[1][1], points[0][0], points[0][1])
-  ];
-
-  fillShape(sortByY(lines.flat()), currentFill);
-}
-
-function charRect(x, y, w, h) {
-  // if (w < 0) {
-  //   console.log(w/charWidth, x/charWidth + w/charWidth);
-  //   w = -w;
-  //   x -= w;
-  //   console.log(w/charWidth, x/charWidth + w/charWidth);
-  // }
-  // if (h < 0) {
-  //   h = -h;
-  //   y -= h;
-  // }
-
-  // TODO maybe dont do this, dont want to reassign variables
-  [x, y] = screen2Char(x + currentTranslation[0], y + currentTranslation[1]);
-  [w, h] = screen2Char(w, h);
-
-  for (let curY = y; curY <= y + h; curY++) {
-    for (let curX = x; curX <= x + w; curX++) {
-      if (curY === y || curY === y + h || curX === x || curX === x + w) {
-        charPoint(curX, curY, currentStroke, "CHAR");
-      } else {
-        charPoint(curX, curY, currentFill, "CHAR");
-      }
-
-    }
-  }
-}
 
 function fillShape(points, char) {
   for (let [y, xs] of points)  {
@@ -385,19 +423,6 @@ function fillShape(points, char) {
 }
 
 
-function charCircle(x, y, radius) {
-  let points = charLineCircle(x, y, radius, currentStroke);
-
-  points = sortByY(points.flat());
-  fillShape(points, currentFill);
-}
-
-function charEllipse(x, y, w, h) {
-  let points = charLineEllipse(x, y, w, h, currentStroke);
-
-  points = sortByY(points.flat());
-  fillShape(points, currentFill);
-}
 
 function putText(text, x, y, mode = "SCREEN", safetyOverride = false) {
   let nx = x;

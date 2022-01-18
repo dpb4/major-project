@@ -1,7 +1,7 @@
 # `charLineEllipse()`
 
 ## Description
-`charLineEllipse()` draws ***only the outline*** of an ellipse on the sketch. It is essentially the same as [`charEllipse()`](charRect.md), but it only draws the outline and cannot be filled. If you only want to draw the outline of a shape, this is more efficient than its filled counterpart. Note: both the width are affected by [`coordinateMode()`](coordinateMode).
+`charLineEllipse()` draws ***only the outline*** of an ellipse on the sketch. It is essentially the same as [`charEllipse()`](charRect.md), but it only draws the outline and cannot be filled. If you only want to draw the outline of a shape, this is more efficient than its filled counterpart. Note: both the width are affected by [`setCoordinateMode()`](setCoordinateMode).
 
 ## Syntax
 `charLineEllipse(x, y, w, h, char)`
