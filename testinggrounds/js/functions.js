@@ -324,6 +324,98 @@ function charEllipse(x, y, w, h) {
   fillShape(points, currentFill);
 }
 
+/**
+ * `putText()` places a string at a given location on the sketch. It starts from the given location and writes the string to the right. It does not do any text wrapping, it just places a line of text.
+ * @param {string} text The text to be displayed
+ * @param {number} x The X coordinate of the leftmost character.
+ * @param {number} y the Y coordinate of the leftmost character.
+ * @param {string} [mode] optional - either `SCREEN` or `CHAR`. Controls which coordinate mode to use.
+ * @param {boolean} [safetyOverride] optional - Either true or false. By default set to false. If `safetyOverride` is false, any character in `text` that is also in `notAllowedCharacters` will not be drawn. It may be less readable, but it won't break anything.
+ */
+function putText(text, x, y, mode = "SCREEN", safetyOverride = false) {
+  let nx = x;
+  let ny = y;
+  
+  if (mode === "SCREEN") {
+    nx = x/charWidth;
+    ny = y/charHeight;
+  }
+  for (let i = 0; i < text.length; i++) {
+    if (!safetyOverride) {
+      if (!notAllowedCharacters.includes(text[i])) {
+        charPoint(nx + i, ny, text[i], mode);
+      }
+    } else {
+      charPoint(nx + i, ny, text[i], mode);
+    }
+  }
+}
+
+/**
+ * `charTextBox()` draws a textbox on the sketch to neatly display text. It works by fixing the width, then scaling the height according to the text provided. The outline of the text box is `currentStroke`. The inside of the text box is by default transparent, but can be set to a character with `background`
+ * @param {string} text 
+ * @param {number} x The X coordinate of the top left of the text box.
+ * @param {number} y the Y coordinate of the top left of the text box.
+ * @param {number} width the total width of the text box (in pixels)
+ * @param {string} [background] optional - character to use for the background of the text box. If left undefined, the background will be transparent.
+ */
+function charTextBox(text, x, y, width, background) {
+  let newWidth = floor(width / charWidth);
+  let lines = textLineSplitter(text, newWidth - 4);
+  
+  if (background === undefined) {
+    charLineRect(x * charWidth, y * charHeight, width, (lines.length + 3) * charHeight);
+  } else {
+    let pf = currentFill;
+    charFill(background);
+    charRect(x * charWidth, y * charHeight, width, (lines.length + 3) * charHeight);
+    charFill(pf);
+  }
+  
+  for (let i = 0; i < lines.length; i++) {
+    putText(lines[i], x + 2, y + i + 2, "CHAR", true);
+  }
+}
+
+/**
+ * 
+ * @param {*} text 
+ * @param {*} lineWidth 
+ * @returns 
+ */
+function textLineSplitter(text, lineWidth) {
+  let lines = new Array(text.split(' ').length).fill('');
+
+  let currentWidth = 0;
+  let currentLine = 0;
+
+  for (let word of text.split(' ')) {
+    if (word.length + currentWidth < lineWidth) {
+
+      lines[currentLine] += word + ' ';
+      currentWidth += word.length + 1;
+    } else if (word.length + currentWidth === lineWidth) {
+
+      lines[currentLine] += word;
+      currentLine++;
+      currentWidth = 0;
+    } else {
+
+      lines[currentLine] = lines[currentLine].slice(0, -1);
+      currentLine++;
+      lines[currentLine] += word + ' ';
+      currentWidth = word.length + 1;
+    }
+  }
+
+  lines = lines.filter(l => l !== '');
+
+  if (lines[lines.length-1][lines[lines.length-1].length-1] === ' ') {
+    lines[lines.length-1] = lines[lines.length-1].slice(0, -1);
+  }
+  
+  return lines;
+}
 function insert(str, index, value) { // y
   return str.substr(0, index) + value + str.substr(index);
 }
@@ -424,24 +516,6 @@ function fillShape(points, char) {
 
 
 
-function putText(text, x, y, mode = "SCREEN", safetyOverride = false) {
-  let nx = x;
-  let ny = y;
-
-  if (mode === "SCREEN") {
-    nx = x/charWidth;
-    ny = y/charHeight;
-  }
-  for (let i = 0; i < text.length; i++) {
-    if (!safetyOverride) {
-      if (!notAllowedCharacters.includes(text[i])) {
-        charPoint(nx + i, ny, text[i], mode);
-      }
-    } else {
-      charPoint(nx + i, ny, text[i], mode);
-    }
-  }
-}
 
 function matrixVectorMult(mat, vec) {
   if (mat.length !== vec.length) {
@@ -654,49 +728,3 @@ function generateProjectionMatrix(horizontalFOV, aspectRatio, nearClip, farClip)
   ];
 }
 
-function textLineSplitter(text, lineWidth) {
-  let lines = new Array(text.split(' ').length).fill('');
-
-  let currentWidth = 0;
-  let currentLine = 0;
-
-  for (let word of text.split(' ')) {
-    if (word.length + currentWidth < lineWidth) {
-
-      lines[currentLine] += word + ' ';
-      currentWidth += word.length + 1;
-    } else if (word.length + currentWidth === lineWidth) {
-
-      lines[currentLine] += word;
-      currentLine++;
-      currentWidth = 0;
-    } else {
-
-      lines[currentLine] = lines[currentLine].slice(0, -1);
-      currentLine++;
-      lines[currentLine] += word + ' ';
-      currentWidth = word.length + 1;
-    }
-  }
-
-  lines = lines.filter(l => l !== '');
-  return lines;
-}
-
-function charTextBox(text, x, y, width, background) {
-  let newWidth = floor(width / charWidth);
-  let lines = textLineSplitter(text, newWidth - 4);
-
-  if (background === undefined) {
-    charLineRect(x * charWidth, y * charHeight, width, (lines.length + 3) * charHeight);
-  } else {
-    let pf = currentFill;
-    charFill(background);
-    charRect(x * charWidth, y * charHeight, width, (lines.length + 3) * charHeight);
-    charFill(pf);
-  }
-    
-  for (let i = 0; i < lines.length; i++) {
-    putText(lines[i], x + 2, y + i + 2, "CHAR", true);
-  }
-}
