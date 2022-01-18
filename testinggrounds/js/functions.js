@@ -189,6 +189,56 @@ function charLineRect(x, y, w, h, char = currentStroke) {
   charLine(x + w, y    , x + w, y + h, char);
   charLine(x    , y + h, x + w, y + h, char);
 }
+
+/**
+ * `charLineCircle()` draws ***only the outline*** of a circle on the sketch centered at `x`, `y`. It is essentially the same as [`charCircle()`](charRect.md), but it only draws the outline and cannot be filled. If you only want to draw the outline of a shape, this is more efficient than its filled counterpart. Note: the radius **is** affected by [`setCoordinateMode()`](setCoordinateMode) and it is expressed **horizontally**. That is, that if `coordinateMode` is set to `CHAR`, `r` will refer to the number of characters going horizontally as the radius.
+ * @param {number} x X coordinate of the centre point
+ * @param {number} y Y coordinate of the centre point
+ * @param {number} radius Radius of the circle
+ * @param {string} [char] optional - Character to use for the outline. By default set to `currentStroke`.
+ * @returns {array} A list of the coordinates (in char coordinates) of all the points it drew
+ */
+function charLineCircle(x, y, radius, char = currentStroke) {
+  let verts = floor(radius/10 + 4); // subject to change
+  let angStep = 1 / verts * TWO_PI;
+  let points = [];
+  for (let i = 0; i < verts; i++) {
+    let angle = i * angStep;
+    
+    points.push(charLine(x + radius*cos(angle), y + radius*sin(angle), x + radius*cos(angle - angStep), y + radius*sin(angle - angStep), char));
+    lastAngle = angle;
+  }
+  
+  return points;
+} 
+
+/**
+ * `charLineEllipse()` draws ***only the outline*** of an ellipse on the sketch. It is essentially the same as [`charEllipse()`](charRect.md), but it only draws the outline and cannot be filled. If you only want to draw the outline of a shape, this is more efficient than its filled counterpart. Note: both the width and the height **must** be positive and both are affected by [`coordinateMode()`](coordinateMode).
+ * @param {number} x 
+ * @param {number} y 
+ * @param {number} w 
+ * @param {number} h 
+ * @param {*} char 
+ * @returns 
+ */
+function charLineEllipse(x, y, w, h, char = currentStroke) {
+  w = abs(w);
+  h = abs(h);
+
+  let verts = floor(max(w, h)/10 + 4); // subject to change
+  let angStep = 1 / verts * TWO_PI;
+  let points = [];
+
+  for (let i = 0; i < verts; i++) {
+    let angle = i * angStep;
+
+    points.push(charLine(x + w*cos(angle), y + h*sin(angle), x + w*cos(angle - angStep), y + h*sin(angle - angStep), char));
+    lastAngle = angle;
+  }
+
+  return points;
+}
+
 function insert(str, index, value) { // y
   return str.substr(0, index) + value + str.substr(index);
 }
@@ -258,37 +308,7 @@ function charTranslate(x, y) {
 
 
 
-function charLineCircle(x, y, radius, char = currentStroke) {
-  let verts = floor(radius/10 + 4); // subject to change
-  let angStep = 1 / verts * TWO_PI;
-  let points = [];
-  for (let i = 0; i < verts; i++) {
-    let angle = i * angStep;
 
-    points.push(charLine(x + radius*cos(angle), y + radius*sin(angle), x + radius*cos(angle - angStep), y + radius*sin(angle - angStep), char));
-    lastAngle = angle;
-  }
-
-  return points;
-} 
-
-function charLineEllipse(x, y, w, h, char = currentStroke) {
-  w = abs(w);
-  h = abs(h);
-
-  let verts = floor(max(w, h)/10 + 4); // subject to change
-  let angStep = 1 / verts * TWO_PI;
-  let points = [];
-
-  for (let i = 0; i < verts; i++) {
-    let angle = i * angStep;
-
-    points.push(charLine(x + w*cos(angle), y + h*sin(angle), x + w*cos(angle - angStep), y + h*sin(angle - angStep), char));
-    lastAngle = angle;
-  }
-
-  return points;
-}
 
 function sortByY(points) {
   let yMap = new Map();

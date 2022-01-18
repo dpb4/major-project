@@ -13,7 +13,6 @@
 
 > `h`: Height of the rectangle
 
-
 > `char`: optional - Character to use for the lines. By default set to `currentStroke`.
 
 ## Returns
