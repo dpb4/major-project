@@ -10,7 +10,7 @@
 > `lineWidth`: The maximum width (in characters) that one line can be.
 
 ## Returns
-A list of the lines that have been split.
+A list of the different lines that the text has been split into.
 
 ## Example
 ```

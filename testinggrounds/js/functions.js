@@ -378,44 +378,76 @@ function charTextBox(text, x, y, width, background) {
 }
 
 /**
- * 
- * @param {*} text 
- * @param {*} lineWidth 
- * @returns 
+ * `textLineSplitter()` takes in a string and splits it into various lines according to `lineWidth`.
+ * @param {string} text The text to be split
+ * @param {number} lineWidth The maximum width (in characters) that one line can be.
+ * @returns {array} A list of the different lines that the text has been split into.
  */
 function textLineSplitter(text, lineWidth) {
   let lines = new Array(text.split(' ').length).fill('');
-
+  
   let currentWidth = 0;
   let currentLine = 0;
-
+  
   for (let word of text.split(' ')) {
     if (word.length + currentWidth < lineWidth) {
-
+      
       lines[currentLine] += word + ' ';
       currentWidth += word.length + 1;
     } else if (word.length + currentWidth === lineWidth) {
-
+      
       lines[currentLine] += word;
       currentLine++;
       currentWidth = 0;
     } else {
-
+      
       lines[currentLine] = lines[currentLine].slice(0, -1);
       currentLine++;
       lines[currentLine] += word + ' ';
       currentWidth = word.length + 1;
     }
   }
-
+  
   lines = lines.filter(l => l !== '');
-
+  
   if (lines[lines.length-1][lines[lines.length-1].length-1] === ' ') {
     lines[lines.length-1] = lines[lines.length-1].slice(0, -1);
   }
   
   return lines;
 }
+
+/**
+ * `screen2char()` takes in an `x` and `y` in pixel coordinates and converts them to char coordinates.
+ * @param {number} x The X coordinate to be converted
+ * @param {number} y The Y coordinate to be converted
+ * @returns {array} A list in the format [x, y] of the new coordinates.
+ */
+function screen2Char(x, y) {
+  return [floor(x/charWidth), floor(y/charHeight)];
+}
+
+/**
+ * `setCoordinateMode()` will change the current `coordinateMode` of the sketch. `coordinateMode` changes how any function that takes in coordinates will behave. More details are in the documentation in my repo.
+ * @param {SCREEN | CHAR} mode either `SCREEN` or `CHAR`.
+ */
+function setCoordinateMode(mode) {
+  if (mode === SCREEN) {
+    coordinateMode = SCREEN;
+  } else if (mode === CHAR) {
+    coordinateMode = CHAR;
+  }
+}
+
+/**
+ * `charTranslate()` will move the origin of the sketch to the location provided. Analagous to `translate()` in p5.
+ * @param {number} x The new X coordinate that will become 0.
+ * @param {number} y The new Y coordinate that will become 0.
+ */
+function charTranslate(x, y) {
+  currentTranslation = [x, y];
+}
+
 function insert(str, index, value) { // y
   return str.substr(0, index) + value + str.substr(index);
 }
@@ -465,21 +497,6 @@ function printOut() { // y
 }
 
 
-function setCoordinateMode(mode) {
-  if (mode === SCREEN) {
-    coordinateMode = SCREEN;
-  } else if (mode === CHAR) {
-    coordinateMode = CHAR;
-  }
-}
-
-function screen2Char(x, y) {
-  return [floor(x/charWidth), floor(y/charHeight)];
-}
-
-function charTranslate(x, y) {
-  currentTranslation = [x, y];
-}
 
 function sortByY(points) {
   let yMap = new Map();
