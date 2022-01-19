@@ -11,7 +11,7 @@ Ascii Renderer for p5 (AR:p5) is a library for use with p5 that uses familiar p5
 - [Shape functions](docs/shape-functions)
 - [Text functions](docs/text-functions)
 - [Coordinate functions](docs/coordinate-functions)
+- [Miscellaneous functions](docs/miscellaneous-functions)
 - [3D functions (not currently working)](docs/3d-functions)
 - [Image functions](docs/image-functions)
-- [Miscellaneous functions](docs/miscellaneous-functions)
 - [Example projects](docs/example-projects)
