@@ -448,14 +448,43 @@ function charTranslate(x, y) {
   currentTranslation = [x, y];
 }
 
+/**
+ * `insert()` takes in a string, and index, and a character, and inserts the character into the string at the given index.
+ * @param {string} str The string where that `value` will be inserted into
+ * @param {number} index The index of `str` where `value` will be inserted
+ * @param {string} value The character that is being inserted into `str`
+ * @returns A new string that has been modified
+ */
 function insert(str, index, value) { // y
-  return str.substr(0, index) + value + str.substr(index);
+  return str.substring(0, index) + value + str.substring(index);
 }
 
+/**
+ * `randChar()` returns a random character. It does not include any characters from `notAllowedCharacters`.
+ * @returns A random character
+ */
 function randChar() {
   let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.`:,;_^"!~=|$&*@%#';
   
-  return characters[round(random(characters.length))];
+  return characters[floor(random(characters.length))];
+}
+
+/**
+ * `printOut()` is what actually updates the text on the screen. It needs to be called every frame for the sketch to actually display every frame. If `printOut()` isn't called, it will seem like nothing is happening. **Make sure** that it is called every frame in the draw loop.
+ */
+function printOut() { // y
+  out = '';
+
+  for (let i = 0; i < resY; i++) {
+    for (let j = 0; j < resX; j++) {
+      out = out.concat(outBlock[j][i]);
+    }
+  }
+
+  for (let i = 0; i < resY; i++) {
+    out = insert(out, i*(resX+1), '\n');
+  }
+  document.getElementById('textCanvas').innerHTML = out;
 }
 
 function charSetup(res = 16) { // y
@@ -481,20 +510,6 @@ function charSetup(res = 16) { // y
 
 
 
-function printOut() { // y
-  out = '';
-
-  for (let i = 0; i < resY; i++) {
-    for (let j = 0; j < resX; j++) {
-      out = out.concat(outBlock[j][i]);
-    }
-  }
-
-  for (let i = 0; i < resY; i++) {
-    out = insert(out, i*(resX+1), '\n');
-  }
-  document.getElementById('textCanvas').innerHTML = out;
-}
 
 
 
