@@ -13,8 +13,11 @@ let model;
 let view;
 let projection;
 
+let img;
 function preload() {
   font = loadFont("./assets/CONSOLA.TTF");
+
+  img = loadImage('Brosephs_Chillaxton.png');
 }
 
 function setup() {
@@ -53,6 +56,7 @@ function setup() {
   // charTranslate(width/2, height/2);
   // noLoop();
   t = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut at malesuada erat. Donec efficitur accumsan dolor non pharetra. Nam vel turpis sed metus feugiat tempor sed ac sem. Duis vitae lacinia dolor, at tincidunt ex. Quisque condimentum gravida nibh non vestibulum. Etiam molestie cursus turpis, sit amet aliquet ligula scelerisque molestie. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque faucibus mauris eu nisl auctor, ut aliquam justo consequat. Maecenas rutrum facilisis faucibus. Phasellus non feugiat nibh, semper volutpat eros. Integer viverra mi interdum augue consequat vulputate in eget felis. Proin maximus enim luctus lacus ornare, ac semper ligula aliquam. Suspendisse non nunc placerat, gravida eros ut, semper diam. Pellentesque a leo lorem.';
+  // noLoop();
 }
 
 
@@ -81,7 +85,9 @@ function draw() {
   // charCircle(0, 0, mouseX);
   // charTriangle(0, 0, 100, 100, mouseX, mouseY);
   // charRect(0, 0, mouseX, mouseY);
-  charEllipse(0, 0, mouseX, mouseY);
+  // charEllipse(0, 0, mouseX, mouseY);
+  putImage(img, 0, 0, mouseX, 0);
+  // image(img, 0, 0);
 
   
   setCoordinateMode(CHAR);

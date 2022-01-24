@@ -1,3 +1,5 @@
+// TODO: check coordiante mode for putText, add image function, update charPoint documentation
+
 let outBlock = [];
 let font;
 let resX, resY;
@@ -46,7 +48,7 @@ const cubeEdges = [
 ];
 
 /**
- * `charFill()` changes the inside colour of any shapes drawn. Analagous to `fill()` in p5. If `col` is a float between 0 and 1, it will use [`gradientMapper()`](gradientMapper) to determine the corresponding character. Otherwise if `col` is a character, it will fill shapes with that character directly. Beware `notAllowedCharacters` if using direct characters.
+ * `charFill()` changes the inside colour of any shapes drawn. Analagous to `fill()` in p5. If `col` is a float between 0 and 1, it will use `colourMapper()` to determine the corresponding character. Otherwise if `col` is a character, it will fill shapes with that character directly. Beware `notAllowedCharacters` if using direct characters.
  * @param {number | string} col Number between 0 and 1 *or* character
  */
 function charFill(col) { 
@@ -58,7 +60,7 @@ function charFill(col) {
 }
 
 /**
- * `charStroke()` changes the outline colour of any shapes drawn. Analagous to `stroke()` in p5. If `col` is a float between 0 and 1, it will use [`gradientMapper()`](gradientMapper) to determine the corresponding character. Otherwise if `col` is a character, it will outline shapes with that character directly. Beware `notAllowedCharacters` if using direct characters.
+ * `charStroke()` changes the outline colour of any shapes drawn. Analagous to `stroke()` in p5. If `col` is a float between 0 and 1, it will use `colourMapper()` to determine the corresponding character. Otherwise if `col` is a character, it will outline shapes with that character directly. Beware `notAllowedCharacters` if using direct characters.
  * @param {number | string} col Number between 0 and 1 *or* character
  */
 function charStroke(col) { 
@@ -69,7 +71,7 @@ function charStroke(col) {
   }
 }
 /**
- * `charBackground()` changes the background colour of the sketch. Analagous to `background()` in p5. If `f` is a float between 0 and 1, it will use [`gradientMapper()`](gradientMapper) to determine the corresponding character. Otherwise if `f` is a character, it will set the background to that character directly. Beware `notAllowedCharacters` if using direct characters.
+ * `charBackground()` changes the background colour of the sketch. Analagous to `background()` in p5. If `f` is a float between 0 and 1, it will use `colourMapper()` to determine the corresponding character. Otherwise if `f` is a character, it will set the background to that character directly. Beware `notAllowedCharacters` if using direct characters.
  * @param {number | string} col Number between 0 and 1 *or* character
  */
 function charBackground(col = 0) {
@@ -121,7 +123,6 @@ function colourMapper(f) {
 function charPoint(x, y, char = currentStroke, mode = coordinateMode) { //working
   if (mode === 'screen') {
     if (x + currentTranslation[0] >= 0 && x + currentTranslation[0] <= width && y + currentTranslation[1] >= 0 && y + currentTranslation[1] <= height) {
-      console.log('yes');
       let p = screen2Char(x + currentTranslation[0], y + currentTranslation[1]);
       outBlock[p[0]][p[1]] = char;
     }
@@ -537,6 +538,40 @@ function charSetup(res = 16) {
   document.getElementById('textCanvas').style.lineHeight = `${charHeight}px`;
 
   document.addEventListener('contextmenu', event => event.preventDefault());
+}
+
+function putImage(img, x, y, w, h) {
+  let wid = w;
+  let hei = h;
+  if (wid === 0) {
+    wid = hei / img.height * img.width;
+  } else if (hei === 0) {
+    hei = wid / img.width * img.height;
+  }
+
+  if (coordinateMode === SCREEN) {
+    wid /= charWidth;
+    hei /= charHeight;
+  }
+
+  img.loadPixels();
+  for (let curY = 0; curY < hei; curY += 1) {
+    for (let curX = 0; curX < wid; curX += 1) {
+      let index = 4 * (floor(curY / hei * img.height) * img.width + floor(curX / wid * img.width));
+      // console.log(index);
+      let r = img.pixels[index];
+      let g = img.pixels[index+1];
+      let b = img.pixels[index+2];
+      let a = img.pixels[index+3];
+
+      if (a === 255) {
+        // console.log('drawing');
+        charPoint(x + curX, y + curY, colourMapper((r+g+b)/3/255), CHAR);
+      } else {
+        // console.log(a);
+      }
+    }
+  }
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
