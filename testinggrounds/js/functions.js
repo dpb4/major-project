@@ -1,6 +1,3 @@
-// TODO: change html text element to be instantiated from here (createP())
-// get rid of Ys
-
 let outBlock = [];
 let font;
 let resX, resY;
@@ -52,7 +49,7 @@ const cubeEdges = [
  * `charFill()` changes the inside colour of any shapes drawn. Analagous to `fill()` in p5. If `col` is a float between 0 and 1, it will use [`gradientMapper()`](gradientMapper) to determine the corresponding character. Otherwise if `col` is a character, it will fill shapes with that character directly. Beware `notAllowedCharacters` if using direct characters.
  * @param {number | string} col Number between 0 and 1 *or* character
  */
-function charFill(col) { // y
+function charFill(col) { 
   if (typeof col === 'number') {
     currentFill = colourMapper(col);
   } else if (typeof col === 'string' && col.length === 1) {
@@ -64,7 +61,7 @@ function charFill(col) { // y
  * `charStroke()` changes the outline colour of any shapes drawn. Analagous to `stroke()` in p5. If `col` is a float between 0 and 1, it will use [`gradientMapper()`](gradientMapper) to determine the corresponding character. Otherwise if `col` is a character, it will outline shapes with that character directly. Beware `notAllowedCharacters` if using direct characters.
  * @param {number | string} col Number between 0 and 1 *or* character
  */
-function charStroke(col) { // y
+function charStroke(col) { 
   if (typeof col === 'number') {
     currentStroke = colourMapper(col);
   } else if (typeof col === 'string' && col.length === 1) {
@@ -455,7 +452,7 @@ function charTranslate(x, y) {
  * @param {string} value The character that is being inserted into `str`
  * @returns A new string that has been modified
  */
-function insert(str, index, value) { // y
+function insert(str, index, value) { 
   return str.substring(0, index) + value + str.substring(index);
 }
 
@@ -472,7 +469,7 @@ function randChar() {
 /**
  * `printOut()` is what actually updates the text on the screen. It needs to be called every frame for the sketch to actually display every frame. If `printOut()` isn't called, it will seem like nothing is happening. **Make sure** that it is called every frame in the draw loop.
  */
-function printOut() { // y
+function printOut() { 
   out = '';
 
   for (let i = 0; i < resY; i++) {
@@ -487,7 +484,7 @@ function printOut() { // y
   document.getElementById('textCanvas').innerHTML = out;
 }
 
-function charSetup(res = 16) { // y
+function charSetup(res = 16) { 
   textAlign(LEFT, TOP);
   textFont(font);
   textSize(res);
@@ -499,6 +496,8 @@ function charSetup(res = 16) { // y
   resX = floor(windowWidth/charWidth) + 1;
   resY = floor(windowHeight/charHeight) + 1;
 
+  // let t = createP('test');
+  // t.id('textCanvas');
   outBlock = new Array(resX).fill(0).map(() => new Array(resY).fill('.'));
 
   document.getElementById('textCanvas').style.fontSize = `${textSize()}px`;
@@ -507,11 +506,9 @@ function charSetup(res = 16) { // y
   document.addEventListener('contextmenu', event => event.preventDefault());
 }
 
-
-
-
-
-
+/////////////////////////////////////////
+// BELOW HERE IS UNDOCUMENTED!!!!!!!!
+/////////////////////////////////////////
 
 function sortByY(points) {
   let yMap = new Map();
