@@ -120,14 +120,14 @@ function colourMapper(f) {
  */
 function charPoint(x, y, char = currentStroke, mode = coordinateMode) { //working
   if (mode === 'screen') {
-    if (x + currentTranslation[0] >= 0 && x + currentTranslation[0] <= windowWidth && y + currentTranslation[0] >= 0 && y + currentTranslation[0] <= windowHeight) {
+    if (x + currentTranslation[0] >= 0 && x + currentTranslation[0] <= width && y + currentTranslation[1] >= 0 && y + currentTranslation[1] <= height) {
       console.log('yes');
       let p = screen2Char(x + currentTranslation[0], y + currentTranslation[1]);
       outBlock[p[0]][p[1]] = char;
     }
   } else if (mode === 'char') {
-    if (x >= 0 && x < resX && y >= 0 && y < resY) { 
-      outBlock[floor(x) + floor(currentTranslation[0] / charWidth)][floor(y) + floor(currentTranslation[1] / charHeight)] = char;
+    if (x + currentTranslation[0] / charWidth >= 0 && x + currentTranslation[0] / charWidth < resX && y + currentTranslation[1] / charHeight >= 0 && y + currentTranslation[1] / charHeight < resY) { 
+      outBlock[floor(x + currentTranslation[0] / charWidth)][floor(y + currentTranslation[1] / charHeight)] = char;
     }
   }
 }
@@ -155,9 +155,9 @@ function charLine(x1, y1, x2, y2, char = currentStroke) { //working
     
     for (let i = 0; i < floor(d) + 1; i++) {
       if (coordinateMode === 'screen') {
-        points.push(screen2Char(lerp(x1 + roundingOff + currentTranslation[0], x2 + roundingOff + currentTranslation[0], i/d), lerp(y1 + roundingOff + currentTranslation[1], y2 + roundingOff + currentTranslation[1], i/d)));
+        points.push(screen2Char(lerp(x1 + roundingOff, x2 + roundingOff, i/d), lerp(y1 + roundingOff, y2 + roundingOff, i/d)));
       } else if (coordinateMode === 'char') {
-        points.push([floor(lerp(x1 + roundingOff + (currentTranslation[0] / charWidth), x2 + roundingOff + (currentTranslation[0] / charWidth), i/d)), floor(lerp(y1 + roundingOff + (currentTranslation[1] / charHeight), y2 + roundingOff + (currentTranslation[1] / charHeight), i/d))]);
+        points.push([floor(lerp(x1 + roundingOff, x2 + roundingOff, i/d)), floor(lerp(y1 + roundingOff, y2 + roundingOff, i/d))]);
       }
       charPoint(points[i][0], points[i][1], char, CHAR);
     }
@@ -298,10 +298,10 @@ function charRect(x, y, w, h) { //working
   let newX, newY, newW, newH;
   
   if (coordinateMode === 'screen') {
-    [newX, newY] = screen2Char(x + currentTranslation[0], y + currentTranslation[1]);
+    [newX, newY] = screen2Char(x, y);
     [newW, newH] = screen2Char(w, h);
   } else {
-    [newX, newY] = [x + currentTranslation[0]/charWidth, y + currentTranslation[1]/charHeight];
+    [newX, newY] = [x/charWidth, y/charHeight];
     [newW, newH] = [w, h];
   }
 
