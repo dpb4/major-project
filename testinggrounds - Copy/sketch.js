@@ -70,25 +70,32 @@ function draw() {
 
   // charTextBox(t, 0, 0, mouseX);
 
+  charTranslate(width/2, height/2);
   setCoordinateMode(SCREEN);
   // charLine(0, 0, mouseX, mouseX);
-  // charPoint(mouseX, mouseX, 's');
+  charPoint(mouseX, mouseY, 's');
   // charLineTriangle(0, 0, 10, 10, mouseX, mouseY);
   // charLineRect(0, 0, mouseX, mouseX);
   // charLineCircle(0, 0, mouseX);
   // charLineEllipse(0, 0, mouseX, mouseY);
   // charCircle(0, 0, mouseX);
+  // charTriangle(0, 0, 100, 100, mouseX, mouseY);
+  // charRect(0, 0, mouseX, mouseY);
+  // charEllipse(0, 0, mouseX, mouseY);
 
   
   setCoordinateMode(CHAR);
   // charLine(0, 0, mouseX, mouseX);
-  // charPoint(mouseX, mouseX, 'c');
+  charPoint(mouseX, mouseX, 'c');
   // charLineTriangle(0, 0, 10, 10, mouseX, mouseY);
   // charLineRect(0, 0, mouseX, mouseX);
   // charLineCircle(0, 0, mouseX);
   // charLineEllipse(0, 0, mouseX, mouseY);
   // charCircle(resX, resY, mouseX);
   // charTriangle(0, 0, mouseX, 0, 0, mouseX);
+  // charTriangle(0, 0, 100, 100, mouseX, mouseY);
+  // charRect(0, 0, mouseX, mouseY);
+  // charEllipse(resX, resY, mouseX, mouseY);
   
   // for (let i = 0; i < 8; i++) {
   //   c[i] = matrixVectorMult(projection, setVecDimension(c[i], 4));

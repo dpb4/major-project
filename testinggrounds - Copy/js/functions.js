@@ -116,17 +116,18 @@ function colourMapper(f) {
  * @param {number} x - the x coordinate of the point
  * @param {number} y - the y coordinate of the point
  * @param {string} [char] - optional - the character to use as the point. Set to `currentStroke` by default.
- * @param {string} [mode] - optional - either `SCREEN` or `CHAR`. Controls which coordinate mode to use.
+ * @param {string} [mode] - optional - either SCREEN or CHAR. Controls which coordinate mode to use.
  */
 function charPoint(x, y, char = currentStroke, mode = coordinateMode) { //working
   if (mode === 'screen') {
     if (x + currentTranslation[0] >= 0 && x + currentTranslation[0] <= windowWidth && y + currentTranslation[0] >= 0 && y + currentTranslation[0] <= windowHeight) {
+      console.log('yes');
       let p = screen2Char(x + currentTranslation[0], y + currentTranslation[1]);
       outBlock[p[0]][p[1]] = char;
     }
   } else if (mode === 'char') {
     if (x >= 0 && x < resX && y >= 0 && y < resY) { 
-      outBlock[floor(x)][floor(y)] = char;
+      outBlock[floor(x) + floor(currentTranslation[0] / charWidth)][floor(y) + floor(currentTranslation[1] / charHeight)] = char;
     }
   }
 }
@@ -272,7 +273,7 @@ function charLineEllipse(x, y, w, h, char = currentStroke) { //working
  * @param {number} x3 X coordinate of third point
  * @param {number} y3 Y coordinate of third point
  */
-function charTriangle(x1, y1, x2, y2, x3, y3) {
+function charTriangle(x1, y1, x2, y2, x3, y3) { //working
   let points = [[x1, y1], [x2, y2], [x3, y3]];
   // sort the points by descending y value
   points.sort((a, b) => b[1]-a[1]);
@@ -293,28 +294,24 @@ function charTriangle(x1, y1, x2, y2, x3, y3) {
  * @param {number} w Width of the rectangle
  * @param {number} h Height of the rectangle
  */
-function charRect(x, y, w, h) {
-  // if (w < 0) {
-  //   console.log(w/charWidth, x/charWidth + w/charWidth);
-  //   w = -w;
-  //   x -= w;
-  //   console.log(w/charWidth, x/charWidth + w/charWidth);
-  // }
-  // if (h < 0) {
-  //   h = -h;
-  //   y -= h;
-  // }
+function charRect(x, y, w, h) { //working
+  let newX, newY, newW, newH;
+  
+  if (coordinateMode === 'screen') {
+    [newX, newY] = screen2Char(x + currentTranslation[0], y + currentTranslation[1]);
+    [newW, newH] = screen2Char(w, h);
+  } else {
+    [newX, newY] = [x + currentTranslation[0]/charWidth, y + currentTranslation[1]/charHeight];
+    [newW, newH] = [w, h];
+  }
 
-  // TODO maybe dont do this, dont want to reassign variables
-  [x, y] = screen2Char(x + currentTranslation[0], y + currentTranslation[1]);
-  [w, h] = screen2Char(w, h);
 
-  for (let curY = y; curY <= y + h; curY++) {
-    for (let curX = x; curX <= x + w; curX++) {
-      if (curY === y || curY === y + h || curX === x || curX === x + w) {
-        charPoint(curX, curY, currentStroke, "CHAR");
+  for (let curY = newY; curY <= newY + newH; curY++) {
+    for (let curX = newX; curX <= newX + newW; curX++) {
+      if (curY === newY || curY === newY + newH || curX === newX || curX === newX + newW) {
+        charPoint(curX, curY, currentStroke, CHAR);
       } else {
-        charPoint(curX, curY, currentFill, "CHAR");
+        charPoint(curX, curY, currentFill, CHAR);
       }
 
     }
@@ -341,7 +338,7 @@ function charCircle(x, y, radius) { //working
  * @param {number} w Width of the ellipse
  * @param {number} h Height of the ellipse
  */
-function charEllipse(x, y, w, h) {
+function charEllipse(x, y, w, h) { //working
   let points = charLineEllipse(x, y, w, h, currentStroke);
 
   points = sortByY(points.flat());
