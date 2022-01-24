@@ -1,6 +1,3 @@
-// TODO: change html text element to be instantiated from here (createP())
-// get rid of Ys
-
 let outBlock = [];
 let font;
 let resX, resY;
@@ -52,7 +49,7 @@ const cubeEdges = [
  * `charFill()` changes the inside colour of any shapes drawn. Analagous to `fill()` in p5. If `col` is a float between 0 and 1, it will use [`gradientMapper()`](gradientMapper) to determine the corresponding character. Otherwise if `col` is a character, it will fill shapes with that character directly. Beware `notAllowedCharacters` if using direct characters.
  * @param {number | string} col Number between 0 and 1 *or* character
  */
-function charFill(col) { // y
+function charFill(col) { 
   if (typeof col === 'number') {
     currentFill = colourMapper(col);
   } else if (typeof col === 'string' && col.length === 1) {
@@ -64,7 +61,7 @@ function charFill(col) { // y
  * `charStroke()` changes the outline colour of any shapes drawn. Analagous to `stroke()` in p5. If `col` is a float between 0 and 1, it will use [`gradientMapper()`](gradientMapper) to determine the corresponding character. Otherwise if `col` is a character, it will outline shapes with that character directly. Beware `notAllowedCharacters` if using direct characters.
  * @param {number | string} col Number between 0 and 1 *or* character
  */
-function charStroke(col) { // y
+function charStroke(col) { 
   if (typeof col === 'number') {
     currentStroke = colourMapper(col);
   } else if (typeof col === 'string' && col.length === 1) {
@@ -121,13 +118,13 @@ function colourMapper(f) {
  * @param {string} [char] - optional - the character to use as the point. Set to `currentStroke` by default.
  * @param {string} [mode] - optional - either `SCREEN` or `CHAR`. Controls which coordinate mode to use.
  */
-function charPoint(x, y, char = currentStroke, mode = 'SCREEN') {
-  if (mode === 'SCREEN') {
+function charPoint(x, y, char = currentStroke, mode = coordinateMode) { //working
+  if (mode === 'screen') {
     if (x + currentTranslation[0] >= 0 && x + currentTranslation[0] <= windowWidth && y + currentTranslation[0] >= 0 && y + currentTranslation[0] <= windowHeight) {
       let p = screen2Char(x + currentTranslation[0], y + currentTranslation[1]);
       outBlock[p[0]][p[1]] = char;
     }
-  } else if (mode === 'CHAR') {
+  } else if (mode === 'char') {
     if (x >= 0 && x < resX && y >= 0 && y < resY) { 
       outBlock[floor(x)][floor(y)] = char;
     }
@@ -143,15 +140,25 @@ function charPoint(x, y, char = currentStroke, mode = 'SCREEN') {
  * @param {string} [char] optional - Character to use for the line. By default set to `currentStroke`.
  * @returns {array} A list of all the coordinates of the points that the line drew (in character coordinates).
  */
-function charLine(x1, y1, x2, y2, char = currentStroke) {
-  let d = max(abs(x2-x1)/charWidth, abs(y2-y1)/charHeight);
+function charLine(x1, y1, x2, y2, char = currentStroke) { //working
+  let d;
+
+  if (coordinateMode === 'screen') {
+    d = max(abs(x2-x1)/charWidth, abs(y2-y1)/charHeight);
+  } else if (coordinateMode === 'char') {
+    d = max(abs(x2-x1), abs(y2-y1));
+  }
   if (d !== 0) {
     let roundingOff = 0.0001;
     let points = [];
     
     for (let i = 0; i < floor(d) + 1; i++) {
-      points.push(screen2Char(lerp(x1 + roundingOff + currentTranslation[0], x2 + roundingOff + currentTranslation[0], i/d), lerp(y1 + roundingOff + currentTranslation[1], y2 + roundingOff + currentTranslation[1], i/d)));
-      charPoint(points[i][0], points[i][1], char, 'CHAR');
+      if (coordinateMode === 'screen') {
+        points.push(screen2Char(lerp(x1 + roundingOff + currentTranslation[0], x2 + roundingOff + currentTranslation[0], i/d), lerp(y1 + roundingOff + currentTranslation[1], y2 + roundingOff + currentTranslation[1], i/d)));
+      } else if (coordinateMode === 'char') {
+        points.push([floor(lerp(x1 + roundingOff + (currentTranslation[0] / charWidth), x2 + roundingOff + (currentTranslation[0] / charWidth), i/d)), floor(lerp(y1 + roundingOff + (currentTranslation[1] / charHeight), y2 + roundingOff + (currentTranslation[1] / charHeight), i/d))]);
+      }
+      charPoint(points[i][0], points[i][1], char, CHAR);
     }
     
     return points;
@@ -169,7 +176,7 @@ function charLine(x1, y1, x2, y2, char = currentStroke) {
  * @param {number} y3 Y coordinate of third point
  * @param {string} [char] optional - Character to use for the lines. By default set to `currentStroke`.
  */
-function charLineTriangle(x1, y1, x2, y2, x3, y3, char = currentStroke) {
+function charLineTriangle(x1, y1, x2, y2, x3, y3, char = currentStroke) { //working
   charLine(x1, y1, x2, y2, char);
   charLine(x2, y2, x3, y3, char);
   charLine(x3, y3, x1, y1, char);
@@ -183,7 +190,7 @@ function charLineTriangle(x1, y1, x2, y2, x3, y3, char = currentStroke) {
  * @param {number} h Height of the rectangle
  * @param {string} [char] optional - Character to use for the lines. By default set to `currentStroke`.
  */
-function charLineRect(x, y, w, h, char = currentStroke) {
+function charLineRect(x, y, w, h, char = currentStroke) { //working
   charLine(x    , y    , x + w, y    , char);
   charLine(x    , y    , x    , y + h, char);
   charLine(x + w, y    , x + w, y + h, char);
@@ -198,15 +205,24 @@ function charLineRect(x, y, w, h, char = currentStroke) {
  * @param {string} [char] optional - Character to use for the outline. By default set to `currentStroke`.
  * @returns {array} A list of the coordinates (in char coordinates) of all the points it drew
  */
-function charLineCircle(x, y, radius, char = currentStroke) {
-  let verts = floor(radius/10 + 4); // subject to change
+function charLineCircle(x, y, radius, char = currentStroke) { //working
+  let verts;
+  let verticalRadius;
+
+  if (coordinateMode === 'screen') {
+    verts = floor(radius/10 + 4); // subject to change
+    verticalRadius = radius;
+  } else if (coordinateMode === 'char') {
+    verts = floor(radius * charWidth/10 + 4); // subject to change
+    verticalRadius = radius * charWidth / charHeight;
+  }
+
   let angStep = 1 / verts * TWO_PI;
   let points = [];
   for (let i = 0; i < verts; i++) {
     let angle = i * angStep;
     
-    points.push(charLine(x + radius*cos(angle), y + radius*sin(angle), x + radius*cos(angle - angStep), y + radius*sin(angle - angStep), char));
-    lastAngle = angle;
+    points.push(charLine(x + radius*cos(angle), y + verticalRadius*sin(angle), x + radius*cos(angle - angStep), y + verticalRadius*sin(angle - angStep), char));
   }
   
   return points;
@@ -219,21 +235,29 @@ function charLineCircle(x, y, radius, char = currentStroke) {
  * @param {number} w Width of the ellipse
  * @param {number} h Height of the ellipse
  * @param {string} [char] optional - Character to use for the lines. By default set to `currentStroke`.
- * @returns 
+ * @returns {array} A list of the coordinates (in char coordinates) of all the points it drew
  */
-function charLineEllipse(x, y, w, h, char = currentStroke) {
-  w = abs(w);
-  h = abs(h);
+function charLineEllipse(x, y, w, h, char = currentStroke) { //working
+  let newW = abs(w);
+  let newH = abs(h);
   
-  let verts = floor(max(w, h)/10 + 4); // subject to change
+  let verts;
+  if (coordinateMode === 'screen') {
+    verts = floor(max(newW, newH)/10 + 4); // subject to change
+  } else if (coordinateMode === 'char') {
+    if (newW * charWidth > newH * charHeight) {
+      verts = floor(newW * charWidth/10 + 4); // subject to change
+    } else {
+      verts = floor(newH * charHeight/10 + 4); // subject to change
+    }
+  }
   let angStep = 1 / verts * TWO_PI;
   let points = [];
   
   for (let i = 0; i < verts; i++) {
     let angle = i * angStep;
     
-    points.push(charLine(x + w*cos(angle), y + h*sin(angle), x + w*cos(angle - angStep), y + h*sin(angle - angStep), char));
-    lastAngle = angle;
+    points.push(charLine(x + newW*cos(angle), y + newH*sin(angle), x + newW*cos(angle - angStep), y + newH*sin(angle - angStep), char));
   }
   
   return points;
@@ -298,12 +322,12 @@ function charRect(x, y, w, h) {
 }
 
 /**
- * `charCircle()` draws a circle on the sketch centered at `x`, `y`. Analgous to `circle()` in p5. Note: the radius **is** affected by [`setCoordinateMode()`](setCoordinateMode) and it is expressed **horizontally**. That is, that if `coordinateMode` is set to `CHAR`, `r` will refer to the number of characters going horizontally as the radius.
+ * `charCircle()` draws a circle on the sketch centered at `x`, `y`. Analagous to `circle()` in p5. Note: the radius **is** affected by [`setCoordinateMode()`](setCoordinateMode) and it is expressed **horizontally**. That is, that if `coordinateMode` is set to `CHAR`, `r` will refer to the number of characters going horizontally as the radius.
  * @param {number} x X coordinate of the centre point
  * @param {number} y Y coordinate of the centre point
  * @param {number} radius Radius of the circle
  */
-function charCircle(x, y, radius) {
+function charCircle(x, y, radius) { //working
   let points = charLineCircle(x, y, radius, currentStroke);
 
   points = sortByY(points.flat());
@@ -332,11 +356,11 @@ function charEllipse(x, y, w, h) {
  * @param {string} [mode] optional - either `SCREEN` or `CHAR`. Controls which coordinate mode to use.
  * @param {boolean} [safetyOverride] optional - Either true or false. By default set to false. If `safetyOverride` is false, any character in `text` that is also in `notAllowedCharacters` will not be drawn. It may be less readable, but it won't break anything.
  */
-function putText(text, x, y, mode = "SCREEN", safetyOverride = false) {
+function putText(text, x, y, mode = "screen", safetyOverride = false) {
   let nx = x;
   let ny = y;
   
-  if (mode === "SCREEN") {
+  if (mode === "screen") {
     nx = x/charWidth;
     ny = y/charHeight;
   }
@@ -448,17 +472,57 @@ function charTranslate(x, y) {
   currentTranslation = [x, y];
 }
 
-function insert(str, index, value) { // y
-  return str.substr(0, index) + value + str.substr(index);
+/**
+ * `insert()` takes in a string, and index, and a character, and inserts the character into the string at the given index.
+ * @param {string} str The string where that `value` will be inserted into
+ * @param {number} index The index of `str` where `value` will be inserted
+ * @param {string} value The character that is being inserted into `str`
+ * @returns A new string that has been modified
+ */
+function insert(str, index, value) { 
+  return str.substring(0, index) + value + str.substring(index);
 }
 
+/**
+ * `randChar()` returns a random character. It does not include any characters from `notAllowedCharacters`.
+ * @returns A random character
+ */
 function randChar() {
   let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.`:,;_^"!~=|$&*@%#';
   
-  return characters[round(random(characters.length))];
+  return characters[floor(random(characters.length))];
 }
 
-function charSetup(res = 16) { // y
+/**
+ * `printOut()` is what actually updates the text on the screen. It needs to be called every frame for the sketch to actually display every frame. If `printOut()` isn't called, it will seem like nothing is happening. **Make sure** that it is called every frame in the draw loop.
+ */
+function printOut() { 
+  out = '';
+
+  for (let i = 0; i < resY; i++) {
+    for (let j = 0; j < resX; j++) {
+      out = out.concat(outBlock[j][i]);
+    }
+  }
+
+  for (let i = 0; i < resY; i++) {
+    out = insert(out, i*(resX+1), '\n');
+  }
+  document.getElementById('textCanvas').innerHTML = out;
+}
+
+/**
+ * `charSetup()` needs to be called in `setup()`. It does a number of things to prepare the sketch. Namely,
+- Determines `charWidth` and `charHeight`
+- Determines `resX`/`resY`
+- Instantiates `outBlock`
+- Sets the appropriate css properties of the text on the screen
+- Disables right clicking 
+
+It optionally takes in one argument, `res`, which controls how big the text is. It is expressed just how fonts normally are, aka in 'points'.
+ * @param {number} [res] optional - the font size of the text on the screen. Default value is 16.
+ */
+function charSetup(res = 16) { 
   textAlign(LEFT, TOP);
   textFont(font);
   textSize(res);
@@ -478,25 +542,9 @@ function charSetup(res = 16) { // y
   document.addEventListener('contextmenu', event => event.preventDefault());
 }
 
-
-
-
-function printOut() { // y
-  out = '';
-
-  for (let i = 0; i < resY; i++) {
-    for (let j = 0; j < resX; j++) {
-      out = out.concat(outBlock[j][i]);
-    }
-  }
-
-  for (let i = 0; i < resY; i++) {
-    out = insert(out, i*(resX+1), '\n');
-  }
-  document.getElementById('textCanvas').innerHTML = out;
-}
-
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// BELOW HERE IS UNDOCUMENTED!!!!!!!!
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function sortByY(points) {
   let yMap = new Map();
@@ -512,7 +560,6 @@ function sortByY(points) {
   return yMap;
 }
 
-
 function fillShape(points, char) {
   for (let [y, xs] of points)  {
     // sort in ascending order 
@@ -525,14 +572,11 @@ function fillShape(points, char) {
 
     for (let x = xs[0]; x < xs[xs.length-1]; x++) {
       if (!xs.includes(x)) {
-        charPoint(x, y, char, 'CHAR');
+        charPoint(x, y, char, 'char');
       }
     }
   }
 }
-
-
-
 
 function matrixVectorMult(mat, vec) {
   if (mat.length !== vec.length) {
