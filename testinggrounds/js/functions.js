@@ -484,6 +484,17 @@ function printOut() {
   document.getElementById('textCanvas').innerHTML = out;
 }
 
+/**
+ * `charSetup()` needs to be called in `setup()`. It does a number of things to prepare the sketch. Namely,
+- Determines `charWidth` and `charHeight`
+- Determines `resX`/`resY`
+- Instantiates `outBlock`
+- Sets the appropriate css properties of the text on the screen
+- Disables right clicking 
+
+It optionally takes in one argument, `res`, which controls how big the text is. It is expressed just how fonts normally are, aka in 'points'.
+ * @param {number} [res] optional - the font size of the text on the screen. Default value is 16.
+ */
 function charSetup(res = 16) { 
   textAlign(LEFT, TOP);
   textFont(font);
@@ -496,8 +507,6 @@ function charSetup(res = 16) {
   resX = floor(windowWidth/charWidth) + 1;
   resY = floor(windowHeight/charHeight) + 1;
 
-  // let t = createP('test');
-  // t.id('textCanvas');
   outBlock = new Array(resX).fill(0).map(() => new Array(resY).fill('.'));
 
   document.getElementById('textCanvas').style.fontSize = `${textSize()}px`;
@@ -506,9 +515,9 @@ function charSetup(res = 16) {
   document.addEventListener('contextmenu', event => event.preventDefault());
 }
 
-/////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // BELOW HERE IS UNDOCUMENTED!!!!!!!!
-/////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function sortByY(points) {
   let yMap = new Map();
@@ -523,7 +532,6 @@ function sortByY(points) {
 
   return yMap;
 }
-
 
 function fillShape(points, char) {
   for (let [y, xs] of points)  {
@@ -542,9 +550,6 @@ function fillShape(points, char) {
     }
   }
 }
-
-
-
 
 function matrixVectorMult(mat, vec) {
   if (mat.length !== vec.length) {
