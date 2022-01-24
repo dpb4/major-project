@@ -1,7 +1,7 @@
 # `charTranslate()`
 
 ## Description
-`charTranslate()` will move the origin of the sketch to the location provided. Analagous to `translate()` in p5. 
+`charTranslate()` will move the origin of the sketch to the location provided. Analagous to `translate()` in p5. `X` and `Y` are both in pixels.
 
 ## Syntax
 `charTranslate(x, y)`
