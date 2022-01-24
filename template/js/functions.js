@@ -1,3 +1,5 @@
+// TODO: check coordiante mode for putText, add image function, update charPoint documentation
+
 let outBlock = [];
 let font;
 let resX, resY;
@@ -46,7 +48,7 @@ const cubeEdges = [
 ];
 
 /**
- * `charFill()` changes the inside colour of any shapes drawn. Analagous to `fill()` in p5. If `col` is a float between 0 and 1, it will use [`gradientMapper()`](gradientMapper) to determine the corresponding character. Otherwise if `col` is a character, it will fill shapes with that character directly. Beware `notAllowedCharacters` if using direct characters.
+ * `charFill()` changes the inside colour of any shapes drawn. Analagous to `fill()` in p5. If `col` is a float between 0 and 1, it will use `colourMapper()` to determine the corresponding character. Otherwise if `col` is a character, it will fill shapes with that character directly. Beware `notAllowedCharacters` if using direct characters.
  * @param {number | string} col Number between 0 and 1 *or* character
  */
 function charFill(col) { 
@@ -58,7 +60,7 @@ function charFill(col) {
 }
 
 /**
- * `charStroke()` changes the outline colour of any shapes drawn. Analagous to `stroke()` in p5. If `col` is a float between 0 and 1, it will use [`gradientMapper()`](gradientMapper) to determine the corresponding character. Otherwise if `col` is a character, it will outline shapes with that character directly. Beware `notAllowedCharacters` if using direct characters.
+ * `charStroke()` changes the outline colour of any shapes drawn. Analagous to `stroke()` in p5. If `col` is a float between 0 and 1, it will use `colourMapper()` to determine the corresponding character. Otherwise if `col` is a character, it will outline shapes with that character directly. Beware `notAllowedCharacters` if using direct characters.
  * @param {number | string} col Number between 0 and 1 *or* character
  */
 function charStroke(col) { 
@@ -69,7 +71,7 @@ function charStroke(col) {
   }
 }
 /**
- * `charBackground()` changes the background colour of the sketch. Analagous to `background()` in p5. If `f` is a float between 0 and 1, it will use [`gradientMapper()`](gradientMapper) to determine the corresponding character. Otherwise if `f` is a character, it will set the background to that character directly. Beware `notAllowedCharacters` if using direct characters.
+ * `charBackground()` changes the background colour of the sketch. Analagous to `background()` in p5. If `f` is a float between 0 and 1, it will use `colourMapper()` to determine the corresponding character. Otherwise if `f` is a character, it will set the background to that character directly. Beware `notAllowedCharacters` if using direct characters.
  * @param {number | string} col Number between 0 and 1 *or* character
  */
 function charBackground(col = 0) {
@@ -116,17 +118,17 @@ function colourMapper(f) {
  * @param {number} x - the x coordinate of the point
  * @param {number} y - the y coordinate of the point
  * @param {string} [char] - optional - the character to use as the point. Set to `currentStroke` by default.
- * @param {string} [mode] - optional - either `SCREEN` or `CHAR`. Controls which coordinate mode to use.
+ * @param {string} [mode] - optional - either SCREEN or CHAR. Controls which coordinate mode to use.
  */
 function charPoint(x, y, char = currentStroke, mode = coordinateMode) { //working
   if (mode === 'screen') {
-    if (x + currentTranslation[0] >= 0 && x + currentTranslation[0] <= windowWidth && y + currentTranslation[0] >= 0 && y + currentTranslation[0] <= windowHeight) {
+    if (x + currentTranslation[0] >= 0 && x + currentTranslation[0] <= width && y + currentTranslation[1] >= 0 && y + currentTranslation[1] <= height) {
       let p = screen2Char(x + currentTranslation[0], y + currentTranslation[1]);
       outBlock[p[0]][p[1]] = char;
     }
   } else if (mode === 'char') {
-    if (x >= 0 && x < resX && y >= 0 && y < resY) { 
-      outBlock[floor(x)][floor(y)] = char;
+    if (x + currentTranslation[0] / charWidth >= 0 && x + currentTranslation[0] / charWidth < resX && y + currentTranslation[1] / charHeight >= 0 && y + currentTranslation[1] / charHeight < resY) { 
+      outBlock[floor(x + currentTranslation[0] / charWidth)][floor(y + currentTranslation[1] / charHeight)] = char;
     }
   }
 }
@@ -154,9 +156,9 @@ function charLine(x1, y1, x2, y2, char = currentStroke) { //working
     
     for (let i = 0; i < floor(d) + 1; i++) {
       if (coordinateMode === 'screen') {
-        points.push(screen2Char(lerp(x1 + roundingOff + currentTranslation[0], x2 + roundingOff + currentTranslation[0], i/d), lerp(y1 + roundingOff + currentTranslation[1], y2 + roundingOff + currentTranslation[1], i/d)));
+        points.push(screen2Char(lerp(x1 + roundingOff, x2 + roundingOff, i/d), lerp(y1 + roundingOff, y2 + roundingOff, i/d)));
       } else if (coordinateMode === 'char') {
-        points.push([floor(lerp(x1 + roundingOff + (currentTranslation[0] / charWidth), x2 + roundingOff + (currentTranslation[0] / charWidth), i/d)), floor(lerp(y1 + roundingOff + (currentTranslation[1] / charHeight), y2 + roundingOff + (currentTranslation[1] / charHeight), i/d))]);
+        points.push([floor(lerp(x1 + roundingOff, x2 + roundingOff, i/d)), floor(lerp(y1 + roundingOff, y2 + roundingOff, i/d))]);
       }
       charPoint(points[i][0], points[i][1], char, CHAR);
     }
@@ -272,7 +274,7 @@ function charLineEllipse(x, y, w, h, char = currentStroke) { //working
  * @param {number} x3 X coordinate of third point
  * @param {number} y3 Y coordinate of third point
  */
-function charTriangle(x1, y1, x2, y2, x3, y3) {
+function charTriangle(x1, y1, x2, y2, x3, y3) { //working
   let points = [[x1, y1], [x2, y2], [x3, y3]];
   // sort the points by descending y value
   points.sort((a, b) => b[1]-a[1]);
@@ -293,28 +295,24 @@ function charTriangle(x1, y1, x2, y2, x3, y3) {
  * @param {number} w Width of the rectangle
  * @param {number} h Height of the rectangle
  */
-function charRect(x, y, w, h) {
-  // if (w < 0) {
-  //   console.log(w/charWidth, x/charWidth + w/charWidth);
-  //   w = -w;
-  //   x -= w;
-  //   console.log(w/charWidth, x/charWidth + w/charWidth);
-  // }
-  // if (h < 0) {
-  //   h = -h;
-  //   y -= h;
-  // }
+function charRect(x, y, w, h) { //working
+  let newX, newY, newW, newH;
+  
+  if (coordinateMode === 'screen') {
+    [newX, newY] = screen2Char(x, y);
+    [newW, newH] = screen2Char(w, h);
+  } else {
+    [newX, newY] = [x/charWidth, y/charHeight];
+    [newW, newH] = [w, h];
+  }
 
-  // TODO maybe dont do this, dont want to reassign variables
-  [x, y] = screen2Char(x + currentTranslation[0], y + currentTranslation[1]);
-  [w, h] = screen2Char(w, h);
 
-  for (let curY = y; curY <= y + h; curY++) {
-    for (let curX = x; curX <= x + w; curX++) {
-      if (curY === y || curY === y + h || curX === x || curX === x + w) {
-        charPoint(curX, curY, currentStroke, "CHAR");
+  for (let curY = newY; curY <= newY + newH; curY++) {
+    for (let curX = newX; curX <= newX + newW; curX++) {
+      if (curY === newY || curY === newY + newH || curX === newX || curX === newX + newW) {
+        charPoint(curX, curY, currentStroke, CHAR);
       } else {
-        charPoint(curX, curY, currentFill, "CHAR");
+        charPoint(curX, curY, currentFill, CHAR);
       }
 
     }
@@ -341,7 +339,7 @@ function charCircle(x, y, radius) { //working
  * @param {number} w Width of the ellipse
  * @param {number} h Height of the ellipse
  */
-function charEllipse(x, y, w, h) {
+function charEllipse(x, y, w, h) { //working
   let points = charLineEllipse(x, y, w, h, currentStroke);
 
   points = sortByY(points.flat());
@@ -540,6 +538,40 @@ function charSetup(res = 16) {
   document.getElementById('textCanvas').style.lineHeight = `${charHeight}px`;
 
   document.addEventListener('contextmenu', event => event.preventDefault());
+}
+
+function putImage(img, x, y, w, h) {
+  let wid = w;
+  let hei = h;
+  if (wid === 0) {
+    wid = hei / img.height * img.width;
+  } else if (hei === 0) {
+    hei = wid / img.width * img.height;
+  }
+
+  if (coordinateMode === SCREEN) {
+    wid /= charWidth;
+    hei /= charHeight;
+  }
+
+  img.loadPixels();
+  for (let curY = 0; curY < hei; curY += 1) {
+    for (let curX = 0; curX < wid; curX += 1) {
+      let index = 4 * (floor(curY / hei * img.height) * img.width + floor(curX / wid * img.width));
+      // console.log(index);
+      let r = img.pixels[index];
+      let g = img.pixels[index+1];
+      let b = img.pixels[index+2];
+      let a = img.pixels[index+3];
+
+      if (a === 255) {
+        // console.log('drawing');
+        charPoint(x + curX, y + curY, colourMapper((r+g+b)/3/255), CHAR);
+      } else {
+        // console.log(a);
+      }
+    }
+  }
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
