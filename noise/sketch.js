@@ -22,7 +22,7 @@ function setup() {
 function draw() {
   for (let x = 0; x < resX; x++) {
     for (let y = 0; y < resY; y++) {
-      charStroke((Math.tanh(5.1 * noise(x * noiseScale * charWidth, y * noiseScale * charHeight, time) - 2.6) + 1)/2);
+      charStroke((Math.tanh(5.1 * noise(x * noiseScale * charWidth, y * noiseScale * charHeight, time) - 2.55) + 1)/2);
       charPoint(x, y);
     }
   }
