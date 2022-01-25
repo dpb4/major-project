@@ -1,7 +1,7 @@
 # Feedback from Beta-testers
 
 ## Arman Borhan
-*Created 'bouncing ball demo'*
+*Created 'ball bounce beta'*
 
 >first of all, it was really fun, it's a cool library that adds a bunch of different ways to display things
 
