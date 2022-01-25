@@ -18,6 +18,16 @@ The template contains a number of things:
 - index.html, which puts the canvas on the screen and links to the sketch
 - sketch.js, where you will write your code.
 
+Inside sketch.js, you'll find a few things already there;
+
+inside `setup()`:
+- `createCanvas()` and `background()` as usual
+- [`charSetup()`](functions/charSetup), which must be called in `setup()` for AR:p5 to work
+- [`gradientStyle()`](functions/gradientStyle), which controls how colours are displayed
+
+inside draw:
+- [`printOut()`](functions/printOut), which needs to be called at the end of the draw loop so that the text updates
+
 ## How does it work?
 
 When the sketch is started, you must call [`charSetup()`](functions/charSetup.md). This creates a P1 element in the body with id `textCanvas`. That is where all the text will be written to while the sketch is running. It is updated every frame. In [`charSetup()`](functions/charSetup.md), the width and height of a character is determined. This allows all the drawing functions to operate on a grid that is `charWidth` by `charHeight`. To determine colours, the [`gradientMapper()`](functions/gradientMapper.md) will take in the stroke or fill as a number and convert it to a character using `currentGradient`. The gradients are created by hand, and by default it is set to the one I came up with.

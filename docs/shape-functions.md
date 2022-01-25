@@ -6,10 +6,10 @@
 - [`charLineTriangle()`](functions/charLineTriangle)
 - [`charLineRect()`](functions/charLineRect)
 - [`charLineCircle()`](functions/charLineCircle)
-- [`charLineEllipse`](functions/charLineCircle)
+- [`charLineEllipse()`](functions/charLineCircle)
 
 ## Shape functions
 - [`charTriangle()`](functions/charTriangle)
 - [`charRect()`](functions/charRect)
-- [`charCircle`](functions/charCircle)
+- [`charCircle()`](functions/charCircle)
 - [`charEllipse()`](functions/charEllipse)
