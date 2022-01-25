@@ -1,5 +1,6 @@
 // TODO: check coordiante mode for putText, add image function, update charPoint documentation
 
+// for explanations of variables, check the docs
 let outBlock = [];
 let font;
 let resX, resY;
@@ -75,6 +76,7 @@ function charStroke(col) {
  * @param {number | string} col Number between 0 and 1 *or* character
  */
 function charBackground(col = 0) {
+  // completely clears outBlock by filling it with the new value
   if (typeof col === 'number') {
     outBlock = new Array(resX).fill(0).map(() => new Array(resY).fill(colourMapper(col)));
   } else if (typeof col === 'string' && col.length === 1) {
@@ -106,9 +108,9 @@ function gradientTest() {
  * @returns Character from `currentGradient`.
  */
 function colourMapper(f) {
-  f = max(0, min(f, 1));
-  if (f !== 1) {
-    return currentGradient[floor(f * currentGradient.length)];
+  newF = max(0, min(f, 1));
+  if (newF !== 1) {
+    return currentGradient[floor(newF * currentGradient.length)];
   }
   return currentGradient[currentGradient.length-1];
 }
@@ -122,11 +124,13 @@ function colourMapper(f) {
  */
 function charPoint(x, y, char = currentStroke, mode = coordinateMode) { //working
   if (mode === 'screen') {
+    // if it is on the screen
     if (x + currentTranslation[0] >= 0 && x + currentTranslation[0] <= width && y + currentTranslation[1] >= 0 && y + currentTranslation[1] <= height) {
       let p = screen2Char(x + currentTranslation[0], y + currentTranslation[1]);
       outBlock[p[0]][p[1]] = char;
     }
   } else if (mode === 'char') {
+    // if it is on the screen
     if (x + currentTranslation[0] / charWidth >= 0 && x + currentTranslation[0] / charWidth < resX && y + currentTranslation[1] / charHeight >= 0 && y + currentTranslation[1] / charHeight < resY) { 
       outBlock[floor(x + currentTranslation[0] / charWidth)][floor(y + currentTranslation[1] / charHeight)] = char;
     }
@@ -143,23 +147,33 @@ function charPoint(x, y, char = currentStroke, mode = coordinateMode) { //workin
  * @returns {array} A list of all the coordinates of the points that the line drew (in character coordinates).
  */
 function charLine(x1, y1, x2, y2, char = currentStroke) { //working
+  // d is max(dx, dy) (in character coordiantes, so usually the x is bigger), aka the L-infinity norm
   let d;
 
+  // account for different modes
   if (coordinateMode === 'screen') {
     d = max(abs(x2-x1)/charWidth, abs(y2-y1)/charHeight);
   } else if (coordinateMode === 'char') {
     d = max(abs(x2-x1), abs(y2-y1));
   }
+
   if (d !== 0) {
+    // basically negative numbers have a tendency to round the wrong way, if you add a tiny offset to them it fixes it
     let roundingOff = 0.0001;
     let points = [];
     
+    // there will be 'd' points calculated which means theres no overlap of points and no gaps exactly (however, it may not be pixel perfect)
     for (let i = 0; i < floor(d) + 1; i++) {
+
+      // both coordinate modes do basically the same thing, they just lerp between the two endpoints and place points along the way
       if (coordinateMode === 'screen') {
+        
         points.push(screen2Char(lerp(x1 + roundingOff, x2 + roundingOff, i/d), lerp(y1 + roundingOff, y2 + roundingOff, i/d)));
       } else if (coordinateMode === 'char') {
+
         points.push([floor(lerp(x1 + roundingOff, x2 + roundingOff, i/d)), floor(lerp(y1 + roundingOff, y2 + roundingOff, i/d))]);
       }
+      // i store the coordinate in the list first so that i dont need to calculate it twice or save it in a variable, just saves a little memory (but of course then references a list, so that might slow it back down, idk exactly)
       charPoint(points[i][0], points[i][1], char, CHAR);
     }
     
@@ -208,25 +222,34 @@ function charLineRect(x, y, w, h, char = currentStroke) { //working
  * @returns {array} A list of the coordinates (in char coordinates) of all the points it drew
  */
 function charLineCircle(x, y, radius, char = currentStroke) { //working
+  // the way circles work is just by creating a regular polygon with a number of sides proportional to the radius
+
   let verts;
+
+  // in character coordinates, if you drew a circle with a constant width in characters it would be an ellipse, so you have to account for that
   let verticalRadius;
 
   if (coordinateMode === 'screen') {
-    verts = floor(radius/10 + 4); // subject to change
+
+    verts = floor(radius/10 + 4);
     verticalRadius = radius;
   } else if (coordinateMode === 'char') {
-    verts = floor(radius * charWidth/10 + 4); // subject to change
+
+    verts = floor(radius * charWidth/10 + 4);
     verticalRadius = radius * charWidth / charHeight;
   }
-
+  
+  // the angle between vertices formed at the center
   let angStep = 1 / verts * TWO_PI;
   let points = [];
+
   for (let i = 0; i < verts; i++) {
     let angle = i * angStep;
     
     points.push(charLine(x + radius*cos(angle), y + verticalRadius*sin(angle), x + radius*cos(angle - angStep), y + verticalRadius*sin(angle - angStep), char));
   }
   
+  // the points are returned so that the filling algorithm knows the border of the shape
   return points;
 } 
 
@@ -243,16 +266,24 @@ function charLineEllipse(x, y, w, h, char = currentStroke) { //working
   let newW = abs(w);
   let newH = abs(h);
   
+  // number of vertices is proportional to the size of the larger radius
   let verts;
   if (coordinateMode === 'screen') {
-    verts = floor(max(newW, newH)/10 + 4); // subject to change
+
+    verts = floor(max(newW, newH)/10 + 4);
   } else if (coordinateMode === 'char') {
+
+    // the radii have to be converted to pixels to see which one is really bigger
     if (newW * charWidth > newH * charHeight) {
-      verts = floor(newW * charWidth/10 + 4); // subject to change
+
+      verts = floor(newW * charWidth/10 + 4);
     } else {
-      verts = floor(newH * charHeight/10 + 4); // subject to change
+
+      verts = floor(newH * charHeight/10 + 4);
     }
   }
+
+  // the angle between vertices formed at the center
   let angStep = 1 / verts * TWO_PI;
   let points = [];
   
@@ -262,6 +293,7 @@ function charLineEllipse(x, y, w, h, char = currentStroke) { //working
     points.push(charLine(x + newW*cos(angle), y + newH*sin(angle), x + newW*cos(angle - angStep), y + newH*sin(angle - angStep), char));
   }
   
+  // the points are returned so that the filling algorithm knows the border of the shape
   return points;
 }
 
@@ -276,6 +308,7 @@ function charLineEllipse(x, y, w, h, char = currentStroke) { //working
  */
 function charTriangle(x1, y1, x2, y2, x3, y3) { //working
   let points = [[x1, y1], [x2, y2], [x3, y3]];
+
   // sort the points by descending y value
   points.sort((a, b) => b[1]-a[1]);
   
@@ -296,25 +329,27 @@ function charTriangle(x1, y1, x2, y2, x3, y3) { //working
  * @param {number} h Height of the rectangle
  */
 function charRect(x, y, w, h) { //working
+  // intead of doing the line -> filled approach like every other shape, I decided to just do a for loop because doing all the shape stuff is way overkill for just a rectangle
   let newX, newY, newW, newH;
   
   if (coordinateMode === 'screen') {
     [newX, newY] = screen2Char(x, y);
     [newW, newH] = screen2Char(w, h);
-  } else {
+  } else if (coordinateMode === 'char') {
     [newX, newY] = [x/charWidth, y/charHeight];
     [newW, newH] = [w, h];
   }
 
-
+  // start at the top left of the rectangle and iterate left then down until its all drawn
   for (let curY = newY; curY <= newY + newH; curY++) {
     for (let curX = newX; curX <= newX + newW; curX++) {
+
+      // if the pixel is on an edge, make it the stroke colour
       if (curY === newY || curY === newY + newH || curX === newX || curX === newX + newW) {
         charPoint(curX, curY, currentStroke, CHAR);
       } else {
         charPoint(curX, curY, currentFill, CHAR);
       }
-
     }
   }
 }
@@ -358,12 +393,17 @@ function putText(text, x, y, mode = "screen", safetyOverride = false) {
   let nx = x;
   let ny = y;
   
+  // adjust for coordinate mode
   if (mode === "screen") {
     nx = x/charWidth;
     ny = y/charHeight;
   }
+
+  // go through each character in the text and place it sequentially
   for (let i = 0; i < text.length; i++) {
     if (!safetyOverride) {
+
+      // if using safety, only place safe characters
       if (!notAllowedCharacters.includes(text[i])) {
         charPoint(nx + i, ny, text[i], mode);
       }
@@ -383,17 +423,24 @@ function putText(text, x, y, mode = "screen", safetyOverride = false) {
  */
 function charTextBox(text, x, y, width, background) {
   let newWidth = floor(width / charWidth);
+
+  // split up the text according to the width
   let lines = textLineSplitter(text, newWidth - 4);
   
   if (background === undefined) {
+
+    // if no background provided, don't add one
     charLineRect(x * charWidth, y * charHeight, width, (lines.length + 3) * charHeight);
   } else {
-    let pf = currentFill;
+
+    // set fill to desired background, draw box, then set it back
+    let temp = currentFill;
     charFill(background);
     charRect(x * charWidth, y * charHeight, width, (lines.length + 3) * charHeight);
-    charFill(pf);
+    charFill(temp);
   }
   
+  // go through and place each line on its own line inside the box
   for (let i = 0; i < lines.length; i++) {
     putText(lines[i], x + 2, y + i + 2, "CHAR", true);
   }
@@ -406,6 +453,8 @@ function charTextBox(text, x, y, width, background) {
  * @returns {array} A list of the different lines that the text has been split into.
  */
 function textLineSplitter(text, lineWidth) {
+  // unfortunately this is a bit of a hack, I instatiate the list of lines with enough spots that every word could be on its own line
+  // after the text has actually been split, I remove all the empty lines
   let lines = new Array(text.split(' ').length).fill('');
   
   let currentWidth = 0;
@@ -414,15 +463,17 @@ function textLineSplitter(text, lineWidth) {
   for (let word of text.split(' ')) {
     if (word.length + currentWidth < lineWidth) {
       
+      // if word fits on current line, add it
       lines[currentLine] += word + ' ';
       currentWidth += word.length + 1;
     } else if (word.length + currentWidth === lineWidth) {
       
+      // if word just barely fits on current line, then add it but start on the next line for the next word
       lines[currentLine] += word;
       currentLine++;
       currentWidth = 0;
     } else {
-      
+      // if word doesn't fit, remove the space from the last word placed then place the current word on a new line
       lines[currentLine] = lines[currentLine].slice(0, -1);
       currentLine++;
       lines[currentLine] += word + ' ';
@@ -430,12 +481,16 @@ function textLineSplitter(text, lineWidth) {
     }
   }
   
+  // remove all empty lines
   lines = lines.filter(l => l !== '');
   
+  // my deepest apologies
+  // checks if the very last character is a space, and if it is then remove it
   if (lines[lines.length-1][lines[lines.length-1].length-1] === ' ') {
     lines[lines.length-1] = lines[lines.length-1].slice(0, -1);
   }
   
+  // return the split up lines
   return lines;
 }
 
@@ -495,17 +550,22 @@ function randChar() {
  * `printOut()` is what actually updates the text on the screen. It needs to be called every frame for the sketch to actually display every frame. If `printOut()` isn't called, it will seem like nothing is happening. **Make sure** that it is called every frame in the draw loop.
  */
 function printOut() { 
+  // this takes outBlock (which is basically the current frame) and converts it into a string
   out = '';
 
+  // first just put every character into one long string
   for (let i = 0; i < resY; i++) {
     for (let j = 0; j < resX; j++) {
       out = out.concat(outBlock[j][i]);
     }
   }
 
+  // then insert a new line after each row so that it doesnt rely on text wrapping to function (in my earliest prototypes, it did)
   for (let i = 0; i < resY; i++) {
     out = insert(out, i*(resX+1), '\n');
   }
+
+  // set the text
   document.getElementById('textCanvas').innerHTML = out;
 }
 
@@ -521,31 +581,52 @@ It optionally takes in one argument, `res`, which controls how big the text is. 
  * @param {number} [res] optional - the font size of the text on the screen. Default value is 16.
  */
 function charSetup(res = 16) { 
+
+  // p5 has a bunch of handy functions for fonts, all of this finds the width/height of a character (assuming the font is monospaced, which is critical)
   textAlign(LEFT, TOP);
   textFont(font);
   textSize(res);
   textLeading(textSize());
-
   charWidth = textWidth('0');
+
+  // space above the line + space below the line = total height of character
   charHeight = textAscent() + textDescent();
 
+  // add one so that there isn't a gap along the edges
   resX = floor(windowWidth/charWidth) + 1;
   resY = floor(windowHeight/charHeight) + 1;
 
+  // instantiate outBlock
   outBlock = new Array(resX).fill(0).map(() => new Array(resY).fill('.'));
 
+  // set the text size according to the variables calculated above
   document.getElementById('textCanvas').style.fontSize = `${textSize()}px`;
   document.getElementById('textCanvas').style.lineHeight = `${charHeight}px`;
 
+  // disable right click
   document.addEventListener('contextmenu', event => event.preventDefault());
 }
 
+/**
+ * `putImage()` draws an image using ascii characters. Analagous to `image()` in p5. If the image is transparent, anything that is transparent at all will not be drawn (so things that are partially transparent wont work, but if its a transparent background it works fine). 
+
+The image takes in a width and height. If one is provided while the other is zero, the zero will scale to match the one that is provided.
+ * @param {p5.Image} img The image to display
+ * @param {number} x The X coordinate of the top left of the image
+ * @param {number} y The Y coordinate of the top left of the image
+ * @param {number} w The width to display the image
+ * @param {number} h The height to display the image
+ */
 function putImage(img, x, y, w, h) {
   let wid = w;
   let hei = h;
+
+  // if either the width or height is zero, scale it according to the original aspect ratio
   if (wid === 0) {
+
     wid = hei / img.height * img.width;
   } else if (hei === 0) {
+
     hei = wid / img.width * img.height;
   }
 
@@ -555,35 +636,37 @@ function putImage(img, x, y, w, h) {
   }
 
   img.loadPixels();
+
+  // essentially draw a rectangle, where each character in it is sampled from the image at that point
   for (let curY = 0; curY < hei; curY += 1) {
     for (let curX = 0; curX < wid; curX += 1) {
+      // pixels array is weird
       let index = 4 * (floor(curY / hei * img.height) * img.width + floor(curX / wid * img.width));
-      // console.log(index);
+
+      // respective channels of the image at the current point
       let r = img.pixels[index];
       let g = img.pixels[index+1];
       let b = img.pixels[index+2];
       let a = img.pixels[index+3];
 
       if (a === 255) {
-        // console.log('drawing');
+        // only draw if it is 100% opaque
         charPoint(x + curX, y + curY, colourMapper((r+g+b)/3/255), CHAR);
-      } else {
-        // console.log(a);
       }
     }
   }
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// BELOW HERE IS UNDOCUMENTED!!!!!!!!
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 function sortByY(points) {
+  // this sorts the points by their Y values, into a map where each Y value is a key has a list of x values as its value
   let yMap = new Map();
 
   for (let i = 0; i < points.length; i++) {
+    // if the Y is already in the map, add to the list
     if (yMap.has(points[i][1])) {
       yMap.get(points[i][1]).push(points[i][0]);
+
+    // otherwise, add the Y value to the list and get the list started
     } else {
       yMap.set(points[i][1], [points[i][0]]);
     }
@@ -593,8 +676,13 @@ function sortByY(points) {
 }
 
 function fillShape(points, char) {
+  // basically a simple implemenation of scan-line polygon filling
+
+  // points is a map output by sortByY above
+
+  // iterate through all the Ys
   for (let [y, xs] of points)  {
-    // sort in ascending order 
+    // sort the Xs in ascending order 
     xs.sort((a, b) => a-b);
 
     // make sure there is always a pair of points
@@ -602,13 +690,21 @@ function fillShape(points, char) {
       xs.push(xs[0]);
     }
 
+    // iterate through the Xs
     for (let x = xs[0]; x < xs[xs.length-1]; x++) {
+      // MAKE SURE that it doesn't put a point over a point already in the list (which would mean a point is overlapping the border, not good)
       if (!xs.includes(x)) {
         charPoint(x, y, char, 'char');
       }
     }
   }
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// BELOW HERE IS UNDOCUMENTED!!!!!!!!
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// I haven't actually made anyting 3d work, so i dont really think it's necessary to document them. Especially since if i actually made them work, its a good chance they'd be dramatically different than how they currently are.
 
 function matrixVectorMult(mat, vec) {
   if (mat.length !== vec.length) {

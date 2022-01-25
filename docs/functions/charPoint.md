@@ -11,7 +11,7 @@
 
 > `char`: optional - the character to use as the point. Set to `currentStroke` by default.
 
-> `mode`: optional - either `SCREEN` or `CHAR`. Controls which coordinate mode to use.
+> `mode`: optional - either `SCREEN` or `CHAR`. This is really just for internal use, so if you want to work in character coordinates you should use [`setCoordinateMode()`](setCoordinateMode)
 
 # Returns
 Nothing

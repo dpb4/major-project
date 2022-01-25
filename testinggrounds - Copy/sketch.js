@@ -74,7 +74,7 @@ function draw() {
 
   // charTextBox(t, 0, 0, mouseX);
 
-  charTranslate(width/2, height/2);
+  charTranslate(0, 0);
   setCoordinateMode(SCREEN);
   // charLine(0, 0, mouseX, mouseX);
   // charPoint(mouseX, mouseY, 's');
@@ -86,7 +86,7 @@ function draw() {
   // charTriangle(0, 0, 100, 100, mouseX, mouseY);
   // charRect(0, 0, mouseX, mouseY);
   // charEllipse(0, 0, mouseX, mouseY);
-  putImage(img, 0, 0, mouseX, 0);
+  putImage(img, 0, 0, mouseX, mouseY);
   // image(img, 0, 0);
 
   

@@ -1,5 +1,5 @@
-# 3D functions
-
+# 3D functions (BROKEN)
+# NONE OF THESE ARE DOCUMENTED!!! DON'T CLICK!!!
 - [`matrixVectorMult()`](functions/matrtixVectorMult)
 - [`getColumn()`](functions/getColumn)
 - [`vectorDot()`](functions/vectorDot)
