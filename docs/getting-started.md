@@ -1,8 +1,22 @@
 # Getting started with AR:p5
 
 ## What is it?
+Ascii Renderer for p5 (AR:p5) is a library for use with p5 that uses familiar p5 syntax and workflow to draw things with ascii text. It can be used to make games, simulations, etc.
 
 ## How do you set it up?
+You just need to download the template.zip file and extract it. Once extracted, open it with your editor of choice and start writing code in sketch.js.
+
+The template contains a number of things:
+- assets folder
+    - consolas font file (for the classic retro look)
+- css folder
+    - css file that sets everything up to look the way it does and disables certain formatting, etc
+- js folder
+    - all the normal p5.js files including p5.sound
+    - functions.js, which is where all of the AR:p5 code is stored
+- .eslintrc.js, which is just an options file for eslint. Not necessary for things to work, just a preference.
+- index.html, which puts the canvas on the screen and links to the sketch
+- sketch.js, where you will write your code.
 
 ## How does it work?
 
