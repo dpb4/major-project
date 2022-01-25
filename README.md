@@ -1,5 +1,4 @@
-# major-project
-CS30 Major Project
+# AR:p5
 
 # [Documentation](documentation)
 
