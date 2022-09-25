@@ -42,7 +42,7 @@ function setup() {
   buffer = getVals();
   cache();
   charStroke(1);
-  console.log(windowX, windowY, viewWidth, viewHeight);
+  // console.log(windowX, windowY, viewWidth, viewHeight);
 
   // noLoop();
   let t = `depth_cutoff:${depth}`;
@@ -51,7 +51,6 @@ function setup() {
 
   up = [endOfText[0] + t.length - depth.toString().length + 6, endOfText[1] - 1];
   down = [endOfText[0] + t.length - depth.toString().length + 6, endOfText[1] + 1];
-
 }
 
 function draw() {
@@ -68,11 +67,11 @@ function mousePressed() {
     let ms = screen2Char(mouseX, mouseY);
     let dl = depth.toString().length;
 
-    if (ms[0] === up[0] + dl && ms[1] === up[1]) {
+    if (ms[0] === up[0] + dl + 1 && ms[1] === up[1]) {
       buttoned = true;
       depth *= 2;
       return;
-    } else if (ms[0] === down[0] + dl && ms[1] === down[1]) {
+    } else if (ms[0] === down[0] + dl + 1 && ms[1] === down[1]) {
       buttoned = true;
       depth *= 0.5;
       return;
@@ -172,7 +171,7 @@ function display() {
     }
   }
 
-  let t = ` ~Depth cutoff:${depth}~ `;
+  let t = ` ~Depth cutoff: ${depth}~ `;
   putText(t, 30, 30, true);
 
   let endOfText = screen2Char(30, 30);
@@ -182,7 +181,7 @@ function display() {
   charPoint(endOfText[0] + 2, endOfText[1], '|', 'CHAR');
   charPoint(endOfText[0] + 2, endOfText[1] + 1, 'v', 'CHAR');
 
-  putText(` ~Current View Width:${viewWidth.toExponential()}~ `, 30, height-30, true);
+  putText(` ~Current View Width: ${viewWidth.toExponential()}~ `, 30, height-30, true);
 }
 
 function selection() {

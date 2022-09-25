@@ -17,6 +17,7 @@ body, html {
     position:absolute;
     top: 0;
     left: 0;
+    hyphens: none;
 
     -webkit-user-select: none; /* Safari */        
     -moz-user-select: none; /* Firefox */
@@ -29,6 +30,7 @@ body, html {
     font-size: 16px;
     line-height: 1;
     /* white-space: pre; */
+    white-space: pre;
 }
 
 @font-face {

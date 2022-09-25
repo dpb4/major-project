@@ -5,12 +5,51 @@ let font;
 let resX, resY;
 let charWidth, charHeight;
 // NOT ALLOWED CHARACTERS: ()[]{}<>- `?&
-let notAllowedCharacters = '()[]{}<>- `?&';
+let notAllowedCharacters = '.,:;\'\"\\/?\|=+-_*&^%$#@!~()[]{}<> `';
+let sterilizedChars = {
+  ".": "&#46;",
+  ",": "&#44;",
+  ":": "&#58;",
+  ";": "&#59;",
+  "'": "&#39;",
+  "\"": "&#34;",
+  "\\": "&#92;",
+  "\|": "&#124;",
+  "=": "&#61;",
+  "+": "&#43;",
+  "-": "&#8209;",
+  "_": "&lowbar;",
+  "*": "&#42;",
+  "&": "&#38;",
+  "^": "&#94;",
+  "%": "&#37;",
+  "$": "&#36;",
+  "#": "&#35;",
+  "@": "&#64;",
+  "!": "&#33;",
+  "~": "&#126;",
+  "(": "&#40;",
+  ")": "&#41;",
+  "[": "&#91;",
+  "]": "&#93;",
+  "{": "&#123;",
+  "}": "&#125;",
+  "<": "&#60;",
+  ">": "&#62;",
+  " ": "&nbsp;",
+  "\`": "&#96;",
+  "/": "&#47;",
+  "?": "&#63;"
+}
 let gradients = [
   '.:=+*#%@',
   '.:;lIE8%',
-  '.\':!;LlIE9G8%',
+  ' .\':!;LlIE9G8%',
+  'iufwieufholiuwhgefoiuwgyefouiywvefoiuyg .,:;\'\"\\/|=+_*&^%$#@!~`',
+  ' .,:;\'\"\\/\|=+_*&^%$#@!~`[]'
 ];
+
+// ? - () [] <>
 
 let currentTranslation = [0, 0];
 
@@ -115,14 +154,21 @@ function printOut() {
   for (let i = 0; i < resY; i++) {
     for (let j = 0; j < resX; j++) {
       // console.log(outBlock[i][j]);
-      out = out.concat(outBlock[j][i]);
+      if (notAllowedCharacters.includes(outBlock[j][i])) {
+        out = out.concat(sterilizedChars[outBlock[j][i]]);
+      } else {
+        out = out.concat(outBlock[j][i]);
+
+      }
+      
       // console.log(out);
     }
+    out = out.concat("\n");
   }
 
-  for (let i = 0; i < resY; i++) {
-    out = insert(out, i*(resX+1), '\n');
-  }
+  // for (let i = 0; i < resY; i++) {
+  //   out = insert(out, i*(resX+1), '\n');
+  // }
   document.getElementById('textCanvas').innerHTML = out;
 }
 
@@ -174,6 +220,11 @@ function charLine(x1, y1, x2, y2, char = currentStroke) {
       points.push(screen2Char(lerp(x1 + roundingOff + currentTranslation[0], x2 + roundingOff + currentTranslation[0], i/d), lerp(y1 + roundingOff + currentTranslation[1], y2 + roundingOff + currentTranslation[1], i/d)));
       charPoint(points[i][0], points[i][1], char, 'CHAR');
     }
+
+    let start = screen2Char(x1, y1);
+    let end = screen2Char(x2, y2);
+    charPoint(start[0], start[1], char, 'CHAR');
+    charPoint(end[0], end[1], char, 'CHAR');
 
     return points;
   }
@@ -301,6 +352,7 @@ function fillShape(points, char) {
 
 function gradientTest() {
   for (let i = 0; i < width; i += charWidth) {
+    
     charStroke(i/width);
     charLine(i, 0, i, height);
   }
