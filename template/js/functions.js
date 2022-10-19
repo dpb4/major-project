@@ -425,7 +425,12 @@ function charTextBox(text, x, y, width, background) {
   let newWidth = floor(width / charWidth);
 
   // split up the text according to the width
-  let lines = textLineSplitter(text, newWidth - 4);
+  let lines = textLineSplitter(text, newWidth - 4, background);
+  
+  if (coordinateMode == SCREEN) {
+    x /= charWidth;
+    y /= charHeight;
+  }
   
   if (background === undefined) {
 
@@ -442,7 +447,7 @@ function charTextBox(text, x, y, width, background) {
   
   // go through and place each line on its own line inside the box
   for (let i = 0; i < lines.length; i++) {
-    putText(lines[i], x + 2, y + i + 2, "CHAR", true);
+    putText(lines[i], x + 2, y + i + 2, CHAR, true);
   }
 }
 
@@ -452,7 +457,7 @@ function charTextBox(text, x, y, width, background) {
  * @param {number} lineWidth The maximum width (in characters) that one line can be.
  * @returns {array} A list of the different lines that the text has been split into.
  */
-function textLineSplitter(text, lineWidth) {
+function textLineSplitter(text, lineWidth, blankNewLineFill='-') {
   // unfortunately this is a bit of a hack, I instatiate the list of lines with enough spots that every word could be on its own line
   // after the text has actually been split, I remove all the empty lines
   let lines = new Array(text.split(' ').length).fill('');
@@ -461,6 +466,17 @@ function textLineSplitter(text, lineWidth) {
   let currentLine = 0;
   
   for (let word of text.split(' ')) {
+    if (word[0] === '\n') {
+      lines[currentLine] = lines[currentLine].slice(0, -1);
+      currentLine++;
+      currentWidth = 0;
+      if (word.length > 1) {
+        word = word.slice(1, word.length);
+      } else {
+        word = blankNewLineFill;
+      }
+      
+    }
     if (word.length + currentWidth < lineWidth) {
       
       // if word fits on current line, add it
@@ -492,6 +508,41 @@ function textLineSplitter(text, lineWidth) {
   
   // return the split up lines
   return lines;
+}
+
+function bigText(text, x, y, char, mode) {
+
+  if (typeof text !== 'string') {
+    text = text.toString();
+  }
+
+  if (coordinateMode == SCREEN) {
+    x /= charWidth;
+    y /= charHeight;
+  }
+
+  if (mode == CENTER) {
+    x -= text.length * 3;
+  }
+
+  for (let c = 0; c < text.length; c++) {
+    let index = (text[c].charCodeAt(0) - 33);
+
+    if (index < 0 || index > 92) { // if it is a space or any other weird character
+      continue;
+    } else {
+      index *= 6;
+    }
+
+    for (let l = index; l < index+5; l++) {
+
+      for (let p = 0; p < 5; p++) {
+        if (bt[l][p] !== '0') {
+          charPoint(x + p + (c*6), y + l - index, char, CHAR);
+        }
+      }
+    }
+  }
 }
 
 /**
@@ -633,6 +684,9 @@ function putImage(img, x, y, w, h) {
   if (coordinateMode === SCREEN) {
     wid /= charWidth;
     hei /= charHeight;
+
+    x /= charWidth;
+    y /= charHeight;
   }
 
   img.loadPixels();
@@ -649,8 +703,7 @@ function putImage(img, x, y, w, h) {
       let b = img.pixels[index+2];
       let a = img.pixels[index+3];
 
-      if (a === 255) {
-        // only draw if it is 100% opaque
+      if (a >= 128) {
         charPoint(x + curX, y + curY, colourMapper((r+g+b)/3/255), CHAR);
       }
     }
