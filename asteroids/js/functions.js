@@ -6,11 +6,48 @@ let font;
 let resX, resY;
 let charWidth, charHeight;
 
-let notAllowedCharacters = '()[]{}<>- `?&';
+let notAllowedCharacters = '.,:;\'\"\\/?\|=+-_*&^%$#@!~()[]{}<> `';
+let sterilizedChars = {
+  ".": "&#46;",
+  ",": "&#44;",
+  ":": "&#58;",
+  ";": "&#59;",
+  "'": "&#39;",
+  "\"": "&#34;",
+  "\\": "&#92;",
+  "\|": "&#124;",
+  "=": "&#61;",
+  "+": "&#43;",
+  "-": "&#8209;",
+  "_": "&lowbar;",
+  "*": "&#42;",
+  "&": "&#38;",
+  "^": "&#94;",
+  "%": "&#37;",
+  "$": "&#36;",
+  "#": "&#35;",
+  "@": "&#64;",
+  "!": "&#33;",
+  "~": "&#126;",
+  "(": "&#40;",
+  ")": "&#41;",
+  "[": "&#91;",
+  "]": "&#93;",
+  "{": "&#123;",
+  "}": "&#125;",
+  "<": "&#60;",
+  ">": "&#62;",
+  " ": "&nbsp;",
+  "\`": "&#96;",
+  "/": "&#47;",
+  "?": "&#63;"
+}
 let gradients = [
   '.:=+*#%@',
   '.:;lIE8%',
-  '.\':!;LlIE9G8%',
+  ' .\':!;LlIE9G8%',
+  'iufwieufholiuwhgefoiuwgyefouiywvefoiuyg .,:;\'\"\\/|=+_*&^%$#@!~`',
+  ' .,:;\'\"\\/\|=+_*&^%$#@!~`[]'
 ];
 
 const CHAR = 'char';
@@ -607,13 +644,17 @@ function printOut() {
   // first just put every character into one long string
   for (let i = 0; i < resY; i++) {
     for (let j = 0; j < resX; j++) {
-      out = out.concat(outBlock[j][i]);
-    }
-  }
+      // console.log(outBlock[i][j]);
+      if (notAllowedCharacters.includes(outBlock[j][i])) {
+        out = out.concat(sterilizedChars[outBlock[j][i]]);
+      } else {
+        out = out.concat(outBlock[j][i]);
 
-  // then insert a new line after each row so that it doesnt rely on text wrapping to function (in my earliest prototypes, it did)
-  for (let i = 0; i < resY; i++) {
-    out = insert(out, i*(resX+1), '\n');
+      }
+      
+      // console.log(out);
+    }
+    out = out.concat("\n");
   }
 
   // set the text
